@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c18bh1iwucg1i"
+
+[deps]
+
+files=["res://csv/ship_skeleton_modules.前缀.translation", "res://csv/ship_skeleton_modules.模块名称.translation", "res://csv/ship_skeleton_modules.槽位部位.translation", "res://csv/ship_skeleton_modules.耐久_HP.translation", "res://csv/ship_skeleton_modules.容量上限.translation", "res://csv/ship_skeleton_modules.星币价格.translation", "res://csv/ship_skeleton_modules.特性描述.translation"]
+
+source_file="res://csv/ship_skeleton_modules.csv"
+dest_files=["res://csv/ship_skeleton_modules.前缀.translation", "res://csv/ship_skeleton_modules.模块名称.translation", "res://csv/ship_skeleton_modules.槽位部位.translation", "res://csv/ship_skeleton_modules.耐久_HP.translation", "res://csv/ship_skeleton_modules.容量上限.translation", "res://csv/ship_skeleton_modules.星币价格.translation", "res://csv/ship_skeleton_modules.特性描述.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

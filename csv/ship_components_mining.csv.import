@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dutp4qc0n2lnv"
+
+[deps]
+
+files=["res://csv/ship_components_mining.前缀.translation", "res://csv/ship_components_mining.组件名称.translation", "res://csv/ship_components_mining.适用槽位.translation", "res://csv/ship_components_mining.Cost.translation", "res://csv/ship_components_mining.P.Cost.translation", "res://csv/ship_components_mining.核心属性.translation", "res://csv/ship_components_mining.特性描述.translation"]
+
+source_file="res://csv/ship_components_mining.csv"
+dest_files=["res://csv/ship_components_mining.前缀.translation", "res://csv/ship_components_mining.组件名称.translation", "res://csv/ship_components_mining.适用槽位.translation", "res://csv/ship_components_mining.Cost.translation", "res://csv/ship_components_mining.P.Cost.translation", "res://csv/ship_components_mining.核心属性.translation", "res://csv/ship_components_mining.特性描述.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

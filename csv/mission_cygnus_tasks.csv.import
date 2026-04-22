@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cy3n83beht646"
+
+[deps]
+
+files=["res://csv/mission_cygnus_tasks.类型.translation", "res://csv/mission_cygnus_tasks.接取点.translation", "res://csv/mission_cygnus_tasks.目标.translation", "res://csv/mission_cygnus_tasks.时限.translation", "res://csv/mission_cygnus_tasks.推荐.translation", "res://csv/mission_cygnus_tasks.任务需求.translation", "res://csv/mission_cygnus_tasks.主要奖励.translation", "res://csv/mission_cygnus_tasks.声望奖励.translation", "res://csv/mission_cygnus_tasks.失败惩罚.translation"]
+
+source_file="res://csv/mission_cygnus_tasks.csv"
+dest_files=["res://csv/mission_cygnus_tasks.类型.translation", "res://csv/mission_cygnus_tasks.接取点.translation", "res://csv/mission_cygnus_tasks.目标.translation", "res://csv/mission_cygnus_tasks.时限.translation", "res://csv/mission_cygnus_tasks.推荐.translation", "res://csv/mission_cygnus_tasks.任务需求.translation", "res://csv/mission_cygnus_tasks.主要奖励.translation", "res://csv/mission_cygnus_tasks.声望奖励.translation", "res://csv/mission_cygnus_tasks.失败惩罚.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

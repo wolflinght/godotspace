@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dnmhn5xs6f1hg"
+
+[deps]
+
+files=["res://csv/ship_components_cargo.前缀.translation", "res://csv/ship_components_cargo.组件名称.translation", "res://csv/ship_components_cargo.适用槽位.translation", "res://csv/ship_components_cargo.Cost.translation", "res://csv/ship_components_cargo.P.Cost.translation", "res://csv/ship_components_cargo.核心属性.translation", "res://csv/ship_components_cargo.特性描述.translation"]
+
+source_file="res://csv/ship_components_cargo.csv"
+dest_files=["res://csv/ship_components_cargo.前缀.translation", "res://csv/ship_components_cargo.组件名称.translation", "res://csv/ship_components_cargo.适用槽位.translation", "res://csv/ship_components_cargo.Cost.translation", "res://csv/ship_components_cargo.P.Cost.translation", "res://csv/ship_components_cargo.核心属性.translation", "res://csv/ship_components_cargo.特性描述.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

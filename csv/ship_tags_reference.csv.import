@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ceto782uewm01"
+
+[deps]
+
+files=["res://csv/ship_tags_reference.key.translation", "res://csv/ship_tags_reference.说明.translation"]
+
+source_file="res://csv/ship_tags_reference.csv"
+dest_files=["res://csv/ship_tags_reference.key.translation", "res://csv/ship_tags_reference.说明.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

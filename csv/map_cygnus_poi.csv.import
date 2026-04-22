@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://kpipteb6au6f"
+
+[deps]
+
+files=["res://csv/map_cygnus_poi.节点分类.translation", "res://csv/map_cygnus_poi.节点名称.translation", "res://csv/map_cygnus_poi.归属.translation", "res://csv/map_cygnus_poi.光照强度.translation", "res://csv/map_cygnus_poi.危险度.translation", "res://csv/map_cygnus_poi.资源池默认值.translation"]
+
+source_file="res://csv/map_cygnus_poi.csv"
+dest_files=["res://csv/map_cygnus_poi.节点分类.translation", "res://csv/map_cygnus_poi.节点名称.translation", "res://csv/map_cygnus_poi.归属.translation", "res://csv/map_cygnus_poi.光照强度.translation", "res://csv/map_cygnus_poi.危险度.translation", "res://csv/map_cygnus_poi.资源池默认值.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

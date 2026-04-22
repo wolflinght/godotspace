@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://5d1ebkknmypl"
+
+[deps]
+
+files=["res://csv/map_cygnus_distance_matrix.铁砧.translation", "res://csv/map_cygnus_distance_matrix.折光（光斑站）.translation", "res://csv/map_cygnus_distance_matrix.锈蚀深渊（中立站）.translation", "res://csv/map_cygnus_distance_matrix.塔洛斯（行星）.translation", "res://csv/map_cygnus_distance_matrix.西风.translation", "res://csv/map_cygnus_distance_matrix.灰烬（卫星）.translation", "res://csv/map_cygnus_distance_matrix.碎石带（资源）.translation", "res://csv/map_cygnus_distance_matrix.17 号船坟（废墟）.translation", "res://csv/map_cygnus_distance_matrix.精炼厂（废墟）.translation", "res://csv/map_cygnus_distance_matrix.X.translation"]
+
+source_file="res://csv/map_cygnus_distance_matrix.csv"
+dest_files=["res://csv/map_cygnus_distance_matrix.铁砧.translation", "res://csv/map_cygnus_distance_matrix.折光（光斑站）.translation", "res://csv/map_cygnus_distance_matrix.锈蚀深渊（中立站）.translation", "res://csv/map_cygnus_distance_matrix.塔洛斯（行星）.translation", "res://csv/map_cygnus_distance_matrix.西风.translation", "res://csv/map_cygnus_distance_matrix.灰烬（卫星）.translation", "res://csv/map_cygnus_distance_matrix.碎石带（资源）.translation", "res://csv/map_cygnus_distance_matrix.17 号船坟（废墟）.translation", "res://csv/map_cygnus_distance_matrix.精炼厂（废墟）.translation", "res://csv/map_cygnus_distance_matrix.X.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

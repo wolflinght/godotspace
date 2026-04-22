@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b5c2qes80qhit"
+
+[deps]
+
+files=["res://csv/mission_state_machine.状态名.translation", "res://csv/mission_state_machine.状态描述.translation", "res://csv/mission_state_machine.允许操作.translation", "res://csv/mission_state_machine.禁止操作.translation", "res://csv/mission_state_machine.特殊规则.translation", "res://csv/mission_state_machine.退出条件.translation"]
+
+source_file="res://csv/mission_state_machine.csv"
+dest_files=["res://csv/mission_state_machine.状态名.translation", "res://csv/mission_state_machine.状态描述.translation", "res://csv/mission_state_machine.允许操作.translation", "res://csv/mission_state_machine.禁止操作.translation", "res://csv/mission_state_machine.特殊规则.translation", "res://csv/mission_state_machine.退出条件.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

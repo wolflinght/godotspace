@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bt6a27x0yqcar"
+
+[deps]
+
+files=["res://csv/battle_enemy_archetypes.敌方阵营.translation", "res://csv/battle_enemy_archetypes.敌人类型.translation", "res://csv/battle_enemy_archetypes.推荐危险度.translation", "res://csv/battle_enemy_archetypes.HP.translation", "res://csv/battle_enemy_archetypes.Shield.translation", "res://csv/battle_enemy_archetypes.DEF.translation", "res://csv/battle_enemy_archetypes.SPD.translation", "res://csv/battle_enemy_archetypes.DPS.translation", "res://csv/battle_enemy_archetypes.备注.translation"]
+
+source_file="res://csv/battle_enemy_archetypes.csv"
+dest_files=["res://csv/battle_enemy_archetypes.敌方阵营.translation", "res://csv/battle_enemy_archetypes.敌人类型.translation", "res://csv/battle_enemy_archetypes.推荐危险度.translation", "res://csv/battle_enemy_archetypes.HP.translation", "res://csv/battle_enemy_archetypes.Shield.translation", "res://csv/battle_enemy_archetypes.DEF.translation", "res://csv/battle_enemy_archetypes.SPD.translation", "res://csv/battle_enemy_archetypes.DPS.translation", "res://csv/battle_enemy_archetypes.备注.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d1nxw0sf8bx4q"
+
+[deps]
+
+files=["res://csv/ship_prefix_effects.显示名.translation", "res://csv/ship_prefix_effects.流派.translation", "res://csv/ship_prefix_effects.件数阈值.translation", "res://csv/ship_prefix_effects.效果说明.translation"]
+
+source_file="res://csv/ship_prefix_effects.csv"
+dest_files=["res://csv/ship_prefix_effects.显示名.translation", "res://csv/ship_prefix_effects.流派.translation", "res://csv/ship_prefix_effects.件数阈值.translation", "res://csv/ship_prefix_effects.效果说明.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

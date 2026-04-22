@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://brwwiwbjbm3as"
+
+[deps]
+
+files=["res://csv/map_orion_distance_matrix.无畏堡（铁骑）.translation", "res://csv/map_orion_distance_matrix.耀斑枢纽（光斑）.translation", "res://csv/map_orion_distance_matrix.折射点（中立）.translation", "res://csv/map_orion_distance_matrix.赫菲斯托斯（行星）.translation", "res://csv/map_orion_distance_matrix.翠绿.translation", "res://csv/map_orion_distance_matrix.卡拉克（行星）.translation", "res://csv/map_orion_distance_matrix.欧罗巴二型（卫星）.translation", "res://csv/map_orion_distance_matrix.战备封锁线.translation", "res://csv/map_orion_distance_matrix.奥林匹斯（残骸）.translation", "res://csv/map_orion_distance_matrix.方尖碑（遗址）.translation", "res://csv/map_orion_distance_matrix.参宿七（蓝巨星）.translation", "res://csv/map_orion_distance_matrix.余烬.translation"]
+
+source_file="res://csv/map_orion_distance_matrix.csv"
+dest_files=["res://csv/map_orion_distance_matrix.无畏堡（铁骑）.translation", "res://csv/map_orion_distance_matrix.耀斑枢纽（光斑）.translation", "res://csv/map_orion_distance_matrix.折射点（中立）.translation", "res://csv/map_orion_distance_matrix.赫菲斯托斯（行星）.translation", "res://csv/map_orion_distance_matrix.翠绿.translation", "res://csv/map_orion_distance_matrix.卡拉克（行星）.translation", "res://csv/map_orion_distance_matrix.欧罗巴二型（卫星）.translation", "res://csv/map_orion_distance_matrix.战备封锁线.translation", "res://csv/map_orion_distance_matrix.奥林匹斯（残骸）.translation", "res://csv/map_orion_distance_matrix.方尖碑（遗址）.translation", "res://csv/map_orion_distance_matrix.参宿七（蓝巨星）.translation", "res://csv/map_orion_distance_matrix.余烬.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

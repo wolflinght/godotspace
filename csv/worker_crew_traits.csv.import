@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dgovbh6ew2vll"
+
+[deps]
+
+files=["res://csv/worker_crew_traits.品级.translation", "res://csv/worker_crew_traits.词条名称.translation", "res://csv/worker_crew_traits.对Build的实质影响.translation"]
+
+source_file="res://csv/worker_crew_traits.csv"
+dest_files=["res://csv/worker_crew_traits.品级.translation", "res://csv/worker_crew_traits.词条名称.translation", "res://csv/worker_crew_traits.对Build的实质影响.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

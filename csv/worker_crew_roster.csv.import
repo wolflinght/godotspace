@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://g7yg8yy3jc7h"
+
+[deps]
+
+files=["res://csv/worker_crew_roster.姓名.translation", "res://csv/worker_crew_roster.品级.translation", "res://csv/worker_crew_roster.岗位.translation", "res://csv/worker_crew_roster.薪水.translation", "res://csv/worker_crew_roster.词条ID.translation", "res://csv/worker_crew_roster.出身背景.translation", "res://csv/worker_crew_roster.口头禅.translation", "res://csv/worker_crew_roster.备注.translation"]
+
+source_file="res://csv/worker_crew_roster.csv"
+dest_files=["res://csv/worker_crew_roster.姓名.translation", "res://csv/worker_crew_roster.品级.translation", "res://csv/worker_crew_roster.岗位.translation", "res://csv/worker_crew_roster.薪水.translation", "res://csv/worker_crew_roster.词条ID.translation", "res://csv/worker_crew_roster.出身背景.translation", "res://csv/worker_crew_roster.口头禅.translation", "res://csv/worker_crew_roster.备注.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

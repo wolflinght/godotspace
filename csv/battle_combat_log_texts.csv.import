@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://10ko3vfxvmgl"
+
+[deps]
+
+files=["res://csv/battle_combat_log_texts.触发事件.translation", "res://csv/battle_combat_log_texts.文案内容.translation", "res://csv/battle_combat_log_texts.变量说明.translation"]
+
+source_file="res://csv/battle_combat_log_texts.csv"
+dest_files=["res://csv/battle_combat_log_texts.触发事件.translation", "res://csv/battle_combat_log_texts.文案内容.translation", "res://csv/battle_combat_log_texts.变量说明.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
