@@ -1,29 +1,25 @@
 #!/bin/bash
-# 部署脚本：将 Godot 项目同步到服务器
+# 部署脚本：push 后在服务器执行 git pull 并重启
 # 用法: ./deploy.sh
 
 SERVER="root@8.161.225.239"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-REMOTE_PATH="/server/godot_server"
-LOCAL_PATH="$(dirname "$0")"
 
-echo "=== 星河放置 部署脚本 ==="
-echo "目标服务器: $SERVER"
-echo "远程路径: $REMOTE_PATH"
+echo "=== 星河放置 部署 ==="
 
-# 同步项目文件（排除本地开发文件）
-rsync -avz --delete \
-  -e "ssh -i $SSH_KEY" \
-  --exclude=".godot/" \
-  --exclude="*.import" \
-  --exclude="export_presets.cfg" \
-  --exclude="deploy.sh" \
-  --exclude=".git/" \
-  --exclude="md/" \
-  --exclude="csv/" \
-  "$LOCAL_PATH/" \
-  "$SERVER:$REMOTE_PATH/"
+# 1. push 到 GitHub
+git push origin main
+if [ $? -ne 0 ]; then
+  echo "Push 失败，中止部署"
+  exit 1
+fi
 
-echo ""
-echo "=== 同步完成 ==="
-echo "重启服务端: ssh -i $SSH_KEY $SERVER 'systemctl restart godot-server'"
+# 2. 服务器 pull 最新代码并重启
+ssh -i "$SSH_KEY" "$SERVER" "
+  cd /server/godot_server &&
+  git pull origin main &&
+  systemctl restart godot-server &&
+  echo '服务端已重启'
+"
+
+echo "=== 部署完成 ==="

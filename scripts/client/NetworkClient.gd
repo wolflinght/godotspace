@@ -3,7 +3,8 @@ extends Node
 
 # 客户端网络层 - WebSocket 连接管理
 
-const SERVER_URL = "ws://8.161.225.239:7777"
+# 本地调试改为 ws://localhost:7777，生产环境改为 ws://8.161.225.239:7777
+const SERVER_URL = "ws://localhost:7777"
 const RECONNECT_DELAY = 3.0
 
 signal connected()
