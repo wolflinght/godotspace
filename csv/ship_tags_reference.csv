@@ -1,0 +1,24 @@
+类别,key,说明
+槽位,nose,舰头
+槽位,wings,舰翼
+槽位,hull,舰身
+槽位,tail,舰尾
+槽位,core,能源
+槽位,cabin,舰仓
+前缀,none,无
+前缀,ironclad,[铁骑]
+前缀,macula,[光斑]
+前缀,singularity,[奇点]
+组件字段,tier,T1 / T2 / T3
+组件字段,slot_allowlist,允许安放的槽位列表
+组件字段,cost,容量占用值
+组件字段,p_cost,出击额外耗电
+战斗标签,kinetic,动能
+战斗标签,thermal,热能
+战斗标签,electromagnetic,电磁
+功能标签,shield,护盾类
+功能标签,armor,护甲类
+功能标签,power_gen,发电类
+功能标签,cargo,货舱类
+功能标签,mining,采矿类
+功能标签,weapon,武器类

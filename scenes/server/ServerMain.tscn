@@ -1,0 +1,21 @@
+[gd_scene load_steps=6 format=3 uid="uid://server_main"]
+
+[ext_resource type="Script" path="res://scripts/server/ServerMain.gd" id="1_server_main"]
+[ext_resource type="Script" path="res://scripts/server/DatabaseManager.gd" id="2_db_manager"]
+[ext_resource type="Script" path="res://scripts/server/CombatSystem.gd" id="3_combat"]
+[ext_resource type="Script" path="res://scripts/server/ActionHandler.gd" id="4_action"]
+[ext_resource type="Script" path="res://scripts/server/MissionManager.gd" id="5_mission"]
+
+[node name="ServerMain" type="Node"]
+script = ExtResource("1_server_main")
+
+[node name="DatabaseManager" type="Node" parent="."]
+script = ExtResource("2_db_manager")
+
+[node name="DailyResetTimer" type="Timer" parent="."]
+wait_time = 60.0
+autostart = true
+
+[node name="SalaryTimer" type="Timer" parent="."]
+wait_time = 1800.0
+autostart = true
