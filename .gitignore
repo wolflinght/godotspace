@@ -1,3 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Godot CSV auto-generated translation files
+*.translation
+*.csv.import
+*.gd.uid
+*.tscn.uid
