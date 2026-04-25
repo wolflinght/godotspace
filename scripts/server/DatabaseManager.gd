@@ -29,6 +29,7 @@ func connect_db() -> bool:
 		return false
 
 	print("[DB] 数据库连接成功: %s@%s/%s" % [DB_USER, DB_HOST, DB_NAME])
+	_init_poi_resources()
 	return true
 
 func _query(sql: String) -> Array:
@@ -43,7 +44,7 @@ func _query(sql: String) -> Array:
 		"-e", sql
 	]
 	var output = []
-	var exit_code = OS.execute(_mysql_cmd, args, output, true, true)
+	var exit_code = OS.execute(_mysql_cmd, args, output, true, false)
 	if exit_code != 0:
 		push_error("[DB] SQL 执行失败: " + sql)
 		return []
@@ -51,9 +52,32 @@ func _query(sql: String) -> Array:
 	var rows = []
 	var raw = output[0] if output.size() > 0 else ""
 	for line in raw.split("\n"):
-		if line.strip_edges() != "":
-			rows.append(line.split("\t"))
+		# 跳过空行和 mysql 警告行
+		if line == "" or line == "\r":
+			continue
+		if "Warning" in line or "warning" in line:
+			continue
+		# 去掉行尾的 \r（Windows 换行）
+		var clean = line.trim_suffix("\r")
+		rows.append(clean.split("\t", true))
 	return rows
+
+func register_player(username: String, password_hash: String) -> Dictionary:
+	# 检查用户名是否已存在
+	var check = _query("SELECT id FROM players WHERE username='%s' LIMIT 1" % _escape(username))
+	if check.size() > 0:
+		return {}
+
+	_query("INSERT INTO players (username, password_hash) VALUES ('%s', '%s')" % [
+		_escape(username), _escape(password_hash)
+	])
+	var rows = _query("SELECT id FROM players WHERE username='%s' LIMIT 1" % _escape(username))
+	if rows.size() == 0:
+		return {}
+
+	var player_id = int(rows[0][0])
+	var player = _load_full_player(player_id)
+	return player
 
 func authenticate_player(username: String, password_hash: String) -> Dictionary:
 	# 实际使用时 password_hash 应为 SHA256 哈希
@@ -75,9 +99,17 @@ func _load_full_player(player_id: int) -> Dictionary:
 	var player = {"player_id": player_id}
 
 	# 加载飞船状态
-	var ship_rows = _query("SELECT status, current_poi, target_poi, depart_time, eta, hp, shield, power, max_power, credits FROM ships WHERE player_id=%d LIMIT 1" % player_id)
+	var ship_rows = _query("SELECT status, current_poi, target_poi, depart_time, eta, hp, shield, power, max_power, credits, slot_hp FROM ships WHERE player_id=%d LIMIT 1" % player_id)
 	if ship_rows.size() > 0:
 		var r = ship_rows[0]
+		var slot_hp_raw = r[10] if r.size() > 10 else ""
+		var slot_hp = JSON.parse_string(slot_hp_raw) if slot_hp_raw != "" and slot_hp_raw != "NULL" else {}
+		if not slot_hp is Dictionary:
+			slot_hp = {}
+		# 确保所有槽位都有默认耐久
+		for slot in ["nose", "wings", "hull", "tail", "core", "cabin"]:
+			if not slot_hp.has(slot):
+				slot_hp[slot] = 1000
 		player["ship"] = {
 			"status": r[0],
 			"current_poi": r[1],
@@ -88,7 +120,8 @@ func _load_full_player(player_id: int) -> Dictionary:
 			"shield": int(r[6]),
 			"power": int(r[7]),
 			"max_power": int(r[8]),
-			"credits": int(r[9])
+			"credits": int(r[9]),
+			"slot_hp": slot_hp
 		}
 	else:
 		# 新玩家默认飞船
@@ -107,12 +140,15 @@ func _load_full_player(player_id: int) -> Dictionary:
 		player["components"][r[0]] = r[1]
 
 	# 加载船员
-	var crew_rows = _query("SELECT slot, tier, trait_id, name, salary, debt FROM crew WHERE player_id=%d" % player_id)
+	var crew_rows = _query("SELECT slot, tier, trait_id, name, backstory, catchphrase, salary, debt FROM crew WHERE player_id=%d" % player_id)
 	player["crew"] = []
 	for r in crew_rows:
 		player["crew"].append({
 			"slot": r[0], "tier": r[1], "trait_id": r[2],
-			"name": r[3], "salary": int(r[4]), "debt": int(r[5])
+			"name": r[3], "backstory": r[4] if r.size() > 4 else "",
+			"catchphrase": r[5] if r.size() > 5 else "",
+			"salary": int(r[6]) if r.size() > 6 else 0,
+			"debt": int(r[7]) if r.size() > 7 else 0
 		})
 
 	# 加载任务
@@ -125,13 +161,26 @@ func _load_full_player(player_id: int) -> Dictionary:
 			"deadline": float(r[4])
 		})
 
+	# 加载声望
+	var rep_rows = _query("SELECT ironclad_rep, macula_rep, neutral_rep FROM players WHERE id=%d LIMIT 1" % player_id)
+	if rep_rows.size() > 0:
+		player["reputation"] = {
+			"ironclad": int(rep_rows[0][0]),
+			"macula":   int(rep_rows[0][1]),
+			"neutral":  int(rep_rows[0][2])
+		}
+	else:
+		player["reputation"] = {"ironclad": 0, "macula": 0, "neutral": 0}
+
 	return player
 
 func _default_ship(player_id: int) -> Dictionary:
+	var default_slot_hp = {"nose": 1200, "wings": 1000, "hull": 1600, "tail": 900, "core": 1100, "cabin": 1300}
+	var slot_hp_json = JSON.stringify(default_slot_hp)
 	var ship = {
 		"player_id": player_id,
 		"status": "docked",
-		"current_poi": "CYG-ST-01",
+		"current_poi": "CYG-SS-01",
 		"target_poi": "",
 		"depart_time": 0.0,
 		"eta": 0.0,
@@ -139,17 +188,18 @@ func _default_ship(player_id: int) -> Dictionary:
 		"shield": 0,
 		"power": 500,
 		"max_power": 500,
-		"credits": 1000
+		"credits": 1000,
+		"slot_hp": default_slot_hp
 	}
-	# 插入数据库
-	_query("INSERT INTO ships (player_id, status, current_poi, hp, shield, power, max_power, credits) VALUES (%d, 'docked', 'CYG-ST-01', 1000, 0, 500, 500, 1000)" % player_id)
+	_query("INSERT INTO ships (player_id, status, current_poi, hp, shield, power, max_power, credits, slot_hp) VALUES (%d, 'docked', 'CYG-SS-01', 1000, 0, 500, 500, 1000, '%s')" % [player_id, _escape(slot_hp_json)])
 	return ship
 
 func save_ship(ship: Dictionary) -> void:
 	var player_id = ship.get("player_id", 0)
 	if player_id == 0:
 		return
-	_query("UPDATE ships SET status='%s', current_poi='%s', target_poi='%s', hp=%d, shield=%d, power=%d, max_power=%d, credits=%d WHERE player_id=%d" % [
+	var slot_hp_json = JSON.stringify(ship.get("slot_hp", {}))
+	_query("UPDATE ships SET status='%s', current_poi='%s', target_poi='%s', hp=%d, shield=%d, power=%d, max_power=%d, credits=%d, slot_hp='%s' WHERE player_id=%d" % [
 		_escape(ship.get("status", "docked")),
 		_escape(ship.get("current_poi", "")),
 		_escape(ship.get("target_poi", "")),
@@ -158,6 +208,7 @@ func save_ship(ship: Dictionary) -> void:
 		ship.get("power", 0),
 		ship.get("max_power", 500),
 		ship.get("credits", 0),
+		_escape(slot_hp_json),
 		player_id
 	])
 
@@ -182,6 +233,13 @@ func add_player_resource(player_id: int, resource_type: String, amount: float) -
 func add_credits(player_id: int, amount: int) -> void:
 	_query("UPDATE ships SET credits=credits+%d WHERE player_id=%d" % [amount, player_id])
 
+func add_reputation(player_id: int, faction: String, amount: int) -> void:
+	var col_map = {"ironclad": "ironclad_rep", "macula": "macula_rep", "neutral": "neutral_rep"}
+	var col = col_map.get(faction, "")
+	if col == "":
+		return
+	_query("UPDATE players SET %s=%s+%d WHERE id=%d" % [col, col, amount, player_id])
+
 func consume_poi_resource(poi_id: String, resource_type: String, amount: float) -> float:
 	# 从 POI 资源池扣除，返回实际扣除量
 	var rows = _query("SELECT remaining FROM poi_resources WHERE poi_id='%s' AND resource_type='%s' LIMIT 1" % [
@@ -199,6 +257,37 @@ func consume_poi_resource(poi_id: String, resource_type: String, amount: float) 
 		actual, _escape(poi_id), _escape(resource_type)
 	])
 	return actual
+
+# POI 资源池默认值（来自 map.md）
+const POI_RESOURCE_DEFAULTS = [
+	# 天鹅座
+	["CYG-PL-01", "钛",       50000],
+	["CYG-PL-02", "燃料气体", 40000],
+	["CYG-MO-01", "钛",       15000],
+	["CYG-AS-01", "钛",       25000],
+	["CYG-AS-01", "暗面废料",  5000],
+	["CYG-RU-02", "暗面废料",  6000],
+	["CYG-ST-01", "放射性材料",2000],
+	# 猎户座
+	["ORI-PL-01", "重金属矿", 80000],
+	["ORI-PL-02", "生物质样本",30000],
+	["ORI-PL-03", "稀土",     60000],
+	["ORI-MO-01", "冰核样本", 20000],
+	["ORI-AS-01", "战备残骸", 50000],
+	["ORI-RU-02", "遗迹碎片",  8000],
+	["ORI-ST-02", "低频信标",  5000],
+]
+
+func _init_poi_resources() -> void:
+	# 用 INSERT IGNORE 确保已有数据不被覆盖（只初始化缺失行）
+	for entry in POI_RESOURCE_DEFAULTS:
+		var poi_id = entry[0]
+		var res_type = entry[1]
+		var daily_limit = entry[2]
+		_query("INSERT IGNORE INTO poi_resources (poi_id, resource_type, remaining, daily_limit) VALUES ('%s', '%s', %d, %d)" % [
+			_escape(poi_id), _escape(res_type), daily_limit, daily_limit
+		])
+	print("[DB] POI 资源池初始化完成")
 
 func reset_all_poi_resources() -> void:
 	# 每日 00:00 重置所有 POI 资源池

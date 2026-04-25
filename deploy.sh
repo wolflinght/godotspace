@@ -15,9 +15,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # 2. 服务器 pull 最新代码并重启
+# 注意：.env 不会随 git push，需要在服务器上手动维护 /server/godot_server/.env
 ssh -i "$SSH_KEY" "$SERVER" "
   cd /server/godot_server &&
   git pull origin main &&
+  if [ -f .env ]; then
+    export \$(grep -v '^#' .env | xargs)
+  fi &&
   systemctl restart godot-server &&
   echo '服务端已重启'
 "

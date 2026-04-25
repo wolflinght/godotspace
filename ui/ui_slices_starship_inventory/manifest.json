@@ -1,0 +1,764 @@
+{
+  "source_image": "/mnt/data/ghostwriter_images/context/2e06e451-eddf-5186-8d07-66f4ead9de2e.png",
+  "source_size": {
+    "width": 2048,
+    "height": 1365
+  },
+  "target_design_size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "coordinate_mapping": "Filenames use target-space coordinates scaled from the screenshot to 1920x1080.",
+  "assets": [
+    {
+      "file_name": "x0009_y0006_w0332_h0114__status_panel_docked.png",
+      "asset_name": "status_panel_docked",
+      "source_box": [
+        10,
+        8,
+        364,
+        152
+      ],
+      "target_x": 9,
+      "target_y": 6,
+      "target_w": 332,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x0342_y0006_w0337_h0114__current_location_panel.png",
+      "asset_name": "current_location_panel",
+      "source_box": [
+        365,
+        8,
+        724,
+        152
+      ],
+      "target_x": 342,
+      "target_y": 6,
+      "target_w": 337,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x0681_y0006_w0337_h0114__power_panel_full.png",
+      "asset_name": "power_panel_full",
+      "source_box": [
+        726,
+        8,
+        1085,
+        152
+      ],
+      "target_x": 681,
+      "target_y": 6,
+      "target_w": 337,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x1018_y0006_w0336_h0114__durability_panel_full.png",
+      "asset_name": "durability_panel_full",
+      "source_box": [
+        1086,
+        8,
+        1444,
+        152
+      ],
+      "target_x": 1018,
+      "target_y": 6,
+      "target_w": 336,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x1355_y0006_w0304_h0114__cargo_capacity_panel_full.png",
+      "asset_name": "cargo_capacity_panel_full",
+      "source_box": [
+        1445,
+        8,
+        1769,
+        152
+      ],
+      "target_x": 1355,
+      "target_y": 6,
+      "target_w": 304,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x1659_y0006_w0252_h0114__star_coin_panel_full.png",
+      "asset_name": "star_coin_panel_full",
+      "source_box": [
+        1770,
+        8,
+        2039,
+        152
+      ],
+      "target_x": 1659,
+      "target_y": 6,
+      "target_w": 252,
+      "target_h": 114,
+      "notes": ""
+    },
+    {
+      "file_name": "x1851_y0031_w0056_h0042__button_add_currency.png",
+      "asset_name": "button_add_currency",
+      "source_box": [
+        1974,
+        39,
+        2034,
+        92
+      ],
+      "target_x": 1851,
+      "target_y": 31,
+      "target_w": 56,
+      "target_h": 42,
+      "notes": ""
+    },
+    {
+      "file_name": "x0786_y0039_w0168_h0034__progressbar_power_100.png",
+      "asset_name": "progressbar_power_100",
+      "source_box": [
+        838,
+        49,
+        1017,
+        92
+      ],
+      "target_x": 786,
+      "target_y": 39,
+      "target_w": 168,
+      "target_h": 34,
+      "notes": ""
+    },
+    {
+      "file_name": "x1088_y0039_w0184_h0034__progressbar_durability_86.png",
+      "asset_name": "progressbar_durability_86",
+      "source_box": [
+        1160,
+        49,
+        1356,
+        92
+      ],
+      "target_x": 1088,
+      "target_y": 39,
+      "target_w": 184,
+      "target_h": 34,
+      "notes": ""
+    },
+    {
+      "file_name": "x1471_y0039_w0151_h0034__progressbar_cargo_capacity_20.png",
+      "asset_name": "progressbar_cargo_capacity_20",
+      "source_box": [
+        1569,
+        49,
+        1730,
+        92
+      ],
+      "target_x": 1471,
+      "target_y": 39,
+      "target_w": 151,
+      "target_h": 34,
+      "notes": ""
+    },
+    {
+      "file_name": "x0375_y0202_w1102_h0362__hero_spaceship.png",
+      "asset_name": "hero_spaceship",
+      "source_box": [
+        400,
+        255,
+        1576,
+        713
+      ],
+      "target_x": 375,
+      "target_y": 202,
+      "target_w": 1102,
+      "target_h": 362,
+      "notes": ""
+    },
+    {
+      "file_name": "x1597_y0279_w0322_h0293__space_station.png",
+      "asset_name": "space_station",
+      "source_box": [
+        1703,
+        352,
+        2047,
+        722
+      ],
+      "target_x": 1597,
+      "target_y": 279,
+      "target_w": 322,
+      "target_h": 293,
+      "notes": ""
+    },
+    {
+      "file_name": "x0196_y0091_w0734_h0483__planet_horizon.png",
+      "asset_name": "planet_horizon",
+      "source_box": [
+        209,
+        115,
+        992,
+        726
+      ],
+      "target_x": 196,
+      "target_y": 91,
+      "target_w": 734,
+      "target_h": 483,
+      "notes": ""
+    },
+    {
+      "file_name": "x0009_y0556_w1902_h0081__tab_strip_background.png",
+      "asset_name": "tab_strip_background",
+      "source_box": [
+        10,
+        703,
+        2039,
+        805
+      ],
+      "target_x": 9,
+      "target_y": 556,
+      "target_w": 1902,
+      "target_h": 81,
+      "notes": ""
+    },
+    {
+      "file_name": "x0015_y0561_w0373_h0075__tab_hull_status_unselected.png",
+      "asset_name": "tab_hull_status_unselected",
+      "source_box": [
+        16,
+        709,
+        414,
+        804
+      ],
+      "target_x": 15,
+      "target_y": 561,
+      "target_w": 373,
+      "target_h": 75,
+      "notes": ""
+    },
+    {
+      "file_name": "x0389_y0559_w0352_h0080__tab_cargo_selected.png",
+      "asset_name": "tab_cargo_selected",
+      "source_box": [
+        415,
+        707,
+        790,
+        808
+      ],
+      "target_x": 389,
+      "target_y": 559,
+      "target_w": 352,
+      "target_h": 80,
+      "notes": ""
+    },
+    {
+      "file_name": "x0009_y0631_w0819_h0439__panel_mineral_storage.png",
+      "asset_name": "panel_mineral_storage",
+      "source_box": [
+        10,
+        798,
+        884,
+        1353
+      ],
+      "target_x": 9,
+      "target_y": 631,
+      "target_w": 819,
+      "target_h": 439,
+      "notes": ""
+    },
+    {
+      "file_name": "x0839_y0631_w1072_h0439__panel_resource_storage.png",
+      "asset_name": "panel_resource_storage",
+      "source_box": [
+        895,
+        798,
+        2039,
+        1353
+      ],
+      "target_x": 839,
+      "target_y": 631,
+      "target_w": 1072,
+      "target_h": 439,
+      "notes": ""
+    },
+    {
+      "file_name": "x0034_y0711_w0764_h0051__row_iron_ore.png",
+      "asset_name": "row_iron_ore",
+      "source_box": [
+        36,
+        899,
+        851,
+        963
+      ],
+      "target_x": 34,
+      "target_y": 711,
+      "target_w": 764,
+      "target_h": 51,
+      "notes": ""
+    },
+    {
+      "file_name": "x0034_y0768_w0764_h0048__row_copper_ore.png",
+      "asset_name": "row_copper_ore",
+      "source_box": [
+        36,
+        971,
+        851,
+        1032
+      ],
+      "target_x": 34,
+      "target_y": 768,
+      "target_w": 764,
+      "target_h": 48,
+      "notes": ""
+    },
+    {
+      "file_name": "x0034_y0821_w0764_h0048__row_titanium_ore.png",
+      "asset_name": "row_titanium_ore",
+      "source_box": [
+        36,
+        1038,
+        851,
+        1099
+      ],
+      "target_x": 34,
+      "target_y": 821,
+      "target_w": 764,
+      "target_h": 48,
+      "notes": ""
+    },
+    {
+      "file_name": "x0034_y0877_w0764_h0050__row_crystal.png",
+      "asset_name": "row_crystal",
+      "source_box": [
+        36,
+        1108,
+        851,
+        1171
+      ],
+      "target_x": 34,
+      "target_y": 877,
+      "target_w": 764,
+      "target_h": 50,
+      "notes": ""
+    },
+    {
+      "file_name": "x0034_y0934_w0764_h0051__row_rare_metal.png",
+      "asset_name": "row_rare_metal",
+      "source_box": [
+        36,
+        1181,
+        851,
+        1245
+      ],
+      "target_x": 34,
+      "target_y": 934,
+      "target_w": 764,
+      "target_h": 51,
+      "notes": ""
+    },
+    {
+      "file_name": "x0054_y1016_w0718_h0035__mineral_storage_footer_note.png",
+      "asset_name": "mineral_storage_footer_note",
+      "source_box": [
+        58,
+        1284,
+        824,
+        1328
+      ],
+      "target_x": 54,
+      "target_y": 1016,
+      "target_w": 718,
+      "target_h": 35,
+      "notes": ""
+    },
+    {
+      "file_name": "x0889_y0710_w0107_h0092__empty_slot_r01_c01.png",
+      "asset_name": "empty_slot_r01_c01",
+      "source_box": [
+        948,
+        897,
+        1062,
+        1013
+      ],
+      "target_x": 889,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1009_y0710_w0107_h0092__empty_slot_r01_c02.png",
+      "asset_name": "empty_slot_r01_c02",
+      "source_box": [
+        1076,
+        897,
+        1190,
+        1013
+      ],
+      "target_x": 1009,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1129_y0710_w0107_h0092__empty_slot_r01_c03.png",
+      "asset_name": "empty_slot_r01_c03",
+      "source_box": [
+        1204,
+        897,
+        1318,
+        1013
+      ],
+      "target_x": 1129,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1249_y0710_w0107_h0092__empty_slot_r01_c04.png",
+      "asset_name": "empty_slot_r01_c04",
+      "source_box": [
+        1332,
+        897,
+        1446,
+        1013
+      ],
+      "target_x": 1249,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1369_y0710_w0107_h0092__empty_slot_r01_c05.png",
+      "asset_name": "empty_slot_r01_c05",
+      "source_box": [
+        1460,
+        897,
+        1574,
+        1013
+      ],
+      "target_x": 1369,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1489_y0710_w0107_h0092__empty_slot_r01_c06.png",
+      "asset_name": "empty_slot_r01_c06",
+      "source_box": [
+        1588,
+        897,
+        1702,
+        1013
+      ],
+      "target_x": 1489,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1609_y0710_w0107_h0092__empty_slot_r01_c07.png",
+      "asset_name": "empty_slot_r01_c07",
+      "source_box": [
+        1716,
+        897,
+        1830,
+        1013
+      ],
+      "target_x": 1609,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1729_y0710_w0107_h0092__empty_slot_r01_c08.png",
+      "asset_name": "empty_slot_r01_c08",
+      "source_box": [
+        1844,
+        897,
+        1958,
+        1013
+      ],
+      "target_x": 1729,
+      "target_y": 710,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x0889_y0813_w0107_h0092__empty_slot_r02_c01.png",
+      "asset_name": "empty_slot_r02_c01",
+      "source_box": [
+        948,
+        1028,
+        1062,
+        1144
+      ],
+      "target_x": 889,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1009_y0813_w0107_h0092__empty_slot_r02_c02.png",
+      "asset_name": "empty_slot_r02_c02",
+      "source_box": [
+        1076,
+        1028,
+        1190,
+        1144
+      ],
+      "target_x": 1009,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1129_y0813_w0107_h0092__empty_slot_r02_c03.png",
+      "asset_name": "empty_slot_r02_c03",
+      "source_box": [
+        1204,
+        1028,
+        1318,
+        1144
+      ],
+      "target_x": 1129,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1249_y0813_w0107_h0092__empty_slot_r02_c04.png",
+      "asset_name": "empty_slot_r02_c04",
+      "source_box": [
+        1332,
+        1028,
+        1446,
+        1144
+      ],
+      "target_x": 1249,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1369_y0813_w0107_h0092__empty_slot_r02_c05.png",
+      "asset_name": "empty_slot_r02_c05",
+      "source_box": [
+        1460,
+        1028,
+        1574,
+        1144
+      ],
+      "target_x": 1369,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1489_y0813_w0107_h0092__empty_slot_r02_c06.png",
+      "asset_name": "empty_slot_r02_c06",
+      "source_box": [
+        1588,
+        1028,
+        1702,
+        1144
+      ],
+      "target_x": 1489,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1609_y0813_w0107_h0092__empty_slot_r02_c07.png",
+      "asset_name": "empty_slot_r02_c07",
+      "source_box": [
+        1716,
+        1028,
+        1830,
+        1144
+      ],
+      "target_x": 1609,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1729_y0813_w0107_h0092__empty_slot_r02_c08.png",
+      "asset_name": "empty_slot_r02_c08",
+      "source_box": [
+        1844,
+        1028,
+        1958,
+        1144
+      ],
+      "target_x": 1729,
+      "target_y": 813,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x0889_y0916_w0107_h0092__empty_slot_r03_c01.png",
+      "asset_name": "empty_slot_r03_c01",
+      "source_box": [
+        948,
+        1158,
+        1062,
+        1274
+      ],
+      "target_x": 889,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1009_y0916_w0107_h0092__empty_slot_r03_c02.png",
+      "asset_name": "empty_slot_r03_c02",
+      "source_box": [
+        1076,
+        1158,
+        1190,
+        1274
+      ],
+      "target_x": 1009,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1129_y0916_w0107_h0092__empty_slot_r03_c03.png",
+      "asset_name": "empty_slot_r03_c03",
+      "source_box": [
+        1204,
+        1158,
+        1318,
+        1274
+      ],
+      "target_x": 1129,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1249_y0916_w0107_h0092__empty_slot_r03_c04.png",
+      "asset_name": "empty_slot_r03_c04",
+      "source_box": [
+        1332,
+        1158,
+        1446,
+        1274
+      ],
+      "target_x": 1249,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1369_y0916_w0107_h0092__empty_slot_r03_c05.png",
+      "asset_name": "empty_slot_r03_c05",
+      "source_box": [
+        1460,
+        1158,
+        1574,
+        1274
+      ],
+      "target_x": 1369,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1489_y0916_w0107_h0092__empty_slot_r03_c06.png",
+      "asset_name": "empty_slot_r03_c06",
+      "source_box": [
+        1588,
+        1158,
+        1702,
+        1274
+      ],
+      "target_x": 1489,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1609_y0916_w0107_h0092__empty_slot_r03_c07.png",
+      "asset_name": "empty_slot_r03_c07",
+      "source_box": [
+        1716,
+        1158,
+        1830,
+        1274
+      ],
+      "target_x": 1609,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x1729_y0916_w0107_h0092__empty_slot_r03_c08.png",
+      "asset_name": "empty_slot_r03_c08",
+      "source_box": [
+        1844,
+        1158,
+        1958,
+        1274
+      ],
+      "target_x": 1729,
+      "target_y": 916,
+      "target_w": 107,
+      "target_h": 92,
+      "notes": ""
+    },
+    {
+      "file_name": "x0015_y0561_w0352_h0080__tab_hull_status_selected.png",
+      "asset_name": "tab_hull_status_selected",
+      "source_box": [
+        16,
+        709,
+        391,
+        810
+      ],
+      "target_x": 15,
+      "target_y": 561,
+      "target_w": 352,
+      "target_h": 80,
+      "notes": "Synthesized from selected cargo tab background + hull tab icon/text."
+    },
+    {
+      "file_name": "x0389_y0561_w0373_h0075__tab_cargo_unselected.png",
+      "asset_name": "tab_cargo_unselected",
+      "source_box": [
+        415,
+        709,
+        813,
+        804
+      ],
+      "target_x": 389,
+      "target_y": 561,
+      "target_w": 373,
+      "target_h": 75,
+      "notes": "Synthesized from unselected hull tab background + cargo tab icon/text."
+    }
+  ]
+}

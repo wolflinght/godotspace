@@ -38,6 +38,9 @@ var missions: Array = []
 # 仓库
 var inventory: Dictionary = {}
 
+# 声望
+var reputation: Dictionary = {"ironclad": 0, "macula": 0, "neutral": 0}
+
 func apply_snapshot(data: Dictionary) -> void:
 	player_id = data.get("player_id", 0)
 	ship = data.get("ship", ship)
@@ -46,6 +49,7 @@ func apply_snapshot(data: Dictionary) -> void:
 	crew = data.get("crew", [])
 	missions = data.get("missions", [])
 	inventory = data.get("inventory", {})
+	reputation = data.get("reputation", {"ironclad": 0, "macula": 0, "neutral": 0})
 	state_updated.emit()
 
 func apply_state_update(payload: Dictionary) -> void:
@@ -72,6 +76,13 @@ func get_eta_remaining_seconds() -> float:
 
 func get_resource(resource_type: String) -> float:
 	return resources.get(resource_type, 0.0)
+
+func apply_mission_status(mission_id: String, status: String) -> void:
+	for m in missions:
+		if m.get("mission_id") == mission_id:
+			m["status"] = status
+			break
+	state_updated.emit()
 
 func get_total_dps() -> int:
 	# 客户端只做展示，不参与计算

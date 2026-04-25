@@ -1,0 +1,17 @@
+﻿field_id,field_name_en,text_example_zh,font_family,font_size_px,font_weight,color_hex,usage_note
+1,Nav Status Primary,停泊中,Source Han Sans CN / 思源黑体,16,Semibold,#42D7FF,导航状态主文本 / 当前航行状态
+2,Nav Status Secondary,点击起航,Source Han Sans CN / 思源黑体,12,Regular,#9AA0A6,导航状态副文本 / 操作提示
+3,Current Location Label,当前位置,Source Han Sans CN / 思源黑体,12,Medium,#A6ABB2,当前位置标签
+4,Location Name,塞里斯星域,Source Han Sans CN / 思源黑体,15,Semibold,#FFFFFF,当前位置名称
+5,Coordinate Text,X: 124.7 Y: -892.3,Source Han Sans CN / 思源黑体,12,Regular,#9AA0A6,坐标信息文本
+6,Energy Label,电量,Source Han Sans CN / 思源黑体,12,Medium,#A6ABB2,能量标签
+7,Energy Value Percent,100%,Source Han Sans CN / 思源黑体,13,Semibold,#FFFFFF,能量百分比数值，位于容量槽内时居中
+8,Energy Status Text,已充满,Source Han Sans CN / 思源黑体,12,Medium,#42D7FF,能量状态描述
+9,Durability Label,总耐久度,Source Han Sans CN / 思源黑体,12,Medium,#A6ABB2,耐久度标签
+10,Durability Percent,86%,Source Han Sans CN / 思源黑体,13,Semibold,#FFFFFF,耐久度百分比，位于容量槽内时居中
+11,Durability Numeric,860 / 1000,Source Han Sans CN / 思源黑体,12,Regular,#9AA0A6,耐久度数值：当前 / 最大
+12,Cargo Label,仓储量,Source Han Sans CN / 思源黑体,12,Medium,#A6ABB2,仓储量标签
+13,Cargo Percent,20%,Source Han Sans CN / 思源黑体,13,Semibold,#FFFFFF,仓储量百分比，位于容量槽内时居中
+14,Cargo Numeric,6 / 30,Source Han Sans CN / 思源黑体,12,Regular,#9AA0A6,仓储量数值：当前 / 最大
+15,Currency Label,星币,Source Han Sans CN / 思源黑体,12,Medium,#A6ABB2,货币标签
+16,Currency Amount,"56,230",Source Han Sans CN / 思源黑体,15,Semibold,#FFFFFF,星币数量

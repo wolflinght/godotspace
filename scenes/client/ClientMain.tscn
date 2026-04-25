@@ -1,0 +1,673 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/client/ClientMain.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/client/NetworkClient.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/client/GameState.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/client/UI.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/client/LoginScreen.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/client/MainScreen.gd" id="6"]
+[ext_resource type="Texture2D" path="res://ui/uislacev3/ChatGPT Image 2026年4月25日 01_29_53.png" id="7"]
+[ext_resource type="Texture2D" path="res://ui/ui_slices_starship_inventory/assets/x0009_y0631_w0819_h0439__panel_mineral_storage.png" id="8"]
+[ext_resource type="Texture2D" path="res://ui/ui_slices_starship_inventory/assets/x0839_y0631_w1072_h0439__panel_resource_storage.png" id="9"]
+[ext_resource type="Texture2D" path="res://ui/ui_slices_starship_inventory/assets/x0889_y0710_w0107_h0092__empty_slot_r01_c01.png" id="10"]
+
+[node name="ClientMain" type="Node"]
+script = ExtResource("1")
+
+[node name="NetworkClient" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="GameState" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("4")
+
+[node name="ConnectingScreen" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="UI/ConnectingScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+text = "连接服务器中..."
+horizontal_alignment = 1
+
+[node name="LoginScreen" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("5")
+
+[node name="VBox" type="VBoxContainer" parent="UI/LoginScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -120.0
+offset_right = 150.0
+offset_bottom = 120.0
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="UI/LoginScreen/VBox"]
+text = "星河放置：暗面危机"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="UsernameInput" type="LineEdit" parent="UI/LoginScreen/VBox"]
+placeholder_text = "用户名"
+custom_minimum_size = Vector2(300, 40)
+
+[node name="PasswordInput" type="LineEdit" parent="UI/LoginScreen/VBox"]
+placeholder_text = "密码"
+secret = true
+custom_minimum_size = Vector2(300, 40)
+
+[node name="LoginBtn" type="Button" parent="UI/LoginScreen/VBox"]
+text = "登 录"
+custom_minimum_size = Vector2(300, 44)
+
+[node name="RegisterBtn" type="Button" parent="UI/LoginScreen/VBox"]
+text = "注 册"
+custom_minimum_size = Vector2(300, 44)
+
+[node name="StatusLabel" type="Label" parent="UI/LoginScreen/VBox"]
+text = ""
+horizontal_alignment = 1
+modulate = Color(1, 0.4, 0.4, 1)
+
+[node name="MainScreen" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("6")
+
+[node name="TopBar" type="Control" parent="UI/MainScreen"]
+layout_mode = 1
+anchor_right = 1.0
+offset_bottom = 120.0
+
+[node name="TopBarBg" type="TextureRect" parent="UI/MainScreen/TopBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("7")
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="TopHBox" type="HBoxContainer" parent="UI/MainScreen/TopBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+
+[node name="StatusCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(332, 114)
+
+[node name="StatusContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/StatusCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 4
+
+[node name="StatusPrimary" type="Label" parent="UI/MainScreen/TopBar/TopHBox/StatusCard/StatusContent"]
+layout_mode = 2
+text = "停泊中"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.259, 0.843, 1.0, 1)
+
+[node name="StatusSecondary" type="Label" parent="UI/MainScreen/TopBar/TopHBox/StatusCard/StatusContent"]
+layout_mode = 2
+text = "点击起航"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.604, 0.627, 0.651, 1)
+
+[node name="PoiCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(337, 114)
+
+[node name="PoiContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/PoiCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 2
+
+[node name="PoiSubLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PoiCard/PoiContent"]
+layout_mode = 2
+text = "当前位置"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.651, 0.671, 0.698, 1)
+
+[node name="PoiNameLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PoiCard/PoiContent"]
+layout_mode = 2
+text = "塞里斯星域"
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+
+[node name="PoiCoordLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PoiCard/PoiContent"]
+layout_mode = 2
+text = "X: — Y: —"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.604, 0.627, 0.651, 1)
+
+[node name="PowerCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(337, 114)
+
+[node name="PowerContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/PowerCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 2
+
+[node name="PowerSubLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PowerCard/PowerContent"]
+layout_mode = 2
+text = "电量"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.651, 0.671, 0.698, 1)
+
+[node name="PowerPercent" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PowerCard/PowerContent"]
+layout_mode = 2
+text = "100%"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+
+[node name="PowerStatusLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/PowerCard/PowerContent"]
+layout_mode = 2
+text = "已充满"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.259, 0.843, 1.0, 1)
+
+[node name="HpCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(336, 114)
+
+[node name="HpContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/HpCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 2
+
+[node name="HpSubLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/HpCard/HpContent"]
+layout_mode = 2
+text = "总耐久度"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.651, 0.671, 0.698, 1)
+
+[node name="HpPercent" type="Label" parent="UI/MainScreen/TopBar/TopHBox/HpCard/HpContent"]
+layout_mode = 2
+text = "86%"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+
+[node name="HpNumericLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/HpCard/HpContent"]
+layout_mode = 2
+text = "860 / 1000"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.604, 0.627, 0.651, 1)
+
+[node name="CargoCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(304, 114)
+
+[node name="CargoContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/CargoCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 2
+
+[node name="CargoSubLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/CargoCard/CargoContent"]
+layout_mode = 2
+text = "仓储量"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.651, 0.671, 0.698, 1)
+
+[node name="CargoPercent" type="Label" parent="UI/MainScreen/TopBar/TopHBox/CargoCard/CargoContent"]
+layout_mode = 2
+text = "20%"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+
+[node name="CargoNumericLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/CargoCard/CargoContent"]
+layout_mode = 2
+text = "6 / 30"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.604, 0.627, 0.651, 1)
+
+[node name="CreditsCard" type="Control" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(252, 114)
+size_flags_horizontal = 3
+
+[node name="CreditsContent" type="VBoxContainer" parent="UI/MainScreen/TopBar/TopHBox/CreditsCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -8.0
+offset_bottom = -8.0
+theme_override_constants/separation = 4
+
+[node name="CurrencySubLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/CreditsCard/CreditsContent"]
+layout_mode = 2
+text = "星币"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.651, 0.671, 0.698, 1)
+
+[node name="CreditsAmountLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox/CreditsCard/CreditsContent"]
+layout_mode = 2
+text = "0"
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+
+[node name="EtaLabel" type="Label" parent="UI/MainScreen/TopBar/TopHBox"]
+custom_minimum_size = Vector2(120, 0)
+text = ""
+visible = false
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.5, 0.9, 1.0, 1)
+
+[node name="VisualCenter" type="Control" parent="UI/MainScreen"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 120.0
+offset_bottom = -240.0
+
+[node name="StationView" type="VBoxContainer" parent="UI/MainScreen/VisualCenter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+visible = false
+
+[node name="StationBg" type="PanelContainer" parent="UI/MainScreen/VisualCenter/StationView"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StationContent" type="HBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="OpsPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="OpsTitle" type="Label" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel"]
+text = "── 操作 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="PoiOption" type="OptionButton" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "选择目的地"
+
+[node name="DepartBtn" type="Button" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "起  飞"
+
+[node name="GridBtn" type="Button" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "连接电网充电"
+
+[node name="FuelRow" type="HBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FuelSpin" type="SpinBox" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel/FuelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(100, 36)
+min_value = 1.0
+max_value = 999.0
+value = 10.0
+
+[node name="FuelBtn" type="Button" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/OpsPanel/FuelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(120, 36)
+text = "购买燃料"
+
+[node name="MissionPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="MissionTitle" type="Label" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/MissionPanel"]
+text = "── 任务 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="MissionHSplit" type="HSplitContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/MissionPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 400
+
+[node name="MissionList" type="ItemList" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/MissionPanel/MissionHSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AcceptBtn" type="Button" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/MissionPanel/MissionHSplit/MissionList"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+text = "接 取"
+
+[node name="ActiveList" type="ItemList" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/MissionPanel/MissionHSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CrewPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent"]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CrewTitle" type="Label" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel"]
+text = "── 船员 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="CrewRoster" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="RecruitSep" type="HSeparator" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel"]
+layout_mode = 2
+
+[node name="RecruitPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RecruitTitle" type="Label" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel/RecruitPanel"]
+text = "── 酒馆招募 ──"
+horizontal_alignment = 1
+
+[node name="RoleOption" type="OptionButton" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel/RecruitPanel"]
+custom_minimum_size = Vector2(200, 32)
+text = "舰长"
+
+[node name="TierOption" type="OptionButton" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel/RecruitPanel"]
+custom_minimum_size = Vector2(200, 32)
+text = "T1 资深 (300)"
+
+[node name="CostLabel" type="Label" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel/RecruitPanel"]
+text = "招募费用：300"
+horizontal_alignment = 1
+modulate = Color(1, 0.85, 0.3, 1)
+
+[node name="RecruitBtn" type="Button" parent="UI/MainScreen/VisualCenter/StationView/StationBg/StationContent/CrewPanel/RecruitPanel"]
+custom_minimum_size = Vector2(200, 36)
+text = "招募船员"
+
+[node name="PlanetView" type="VBoxContainer" parent="UI/MainScreen/VisualCenter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+visible = false
+
+[node name="PlanetBg" type="PanelContainer" parent="UI/MainScreen/VisualCenter/PlanetView"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlanetContent" type="HBoxContainer" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PlanetOpsPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PlanetOpsTitle" type="Label" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetOpsPanel"]
+text = "── 操作 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="DockBtn" type="Button" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetOpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "停  泊"
+
+[node name="PlanetDepartBtn" type="Button" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetOpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "起  飞"
+
+[node name="SosBtn" type="Button" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetOpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "SOS 求救"
+modulate = Color(1, 0.3, 0.3, 1)
+
+[node name="PlanetPoiOption" type="OptionButton" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetOpsPanel"]
+custom_minimum_size = Vector2(240, 36)
+text = "选择目的地"
+
+[node name="PlanetMissionPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="PlanetMissionTitle" type="Label" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetMissionPanel"]
+text = "── 进行中任务 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="PlanetActiveList" type="ItemList" parent="UI/MainScreen/VisualCenter/PlanetView/PlanetBg/PlanetContent/PlanetMissionPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TransitView" type="VBoxContainer" parent="UI/MainScreen/VisualCenter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+visible = false
+
+[node name="TransitBg" type="PanelContainer" parent="UI/MainScreen/VisualCenter/TransitView"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TransitContent" type="HBoxContainer" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TransitInfoPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TransitTitle" type="Label" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent/TransitInfoPanel"]
+text = "── 航行中 ──"
+horizontal_alignment = 1
+modulate = Color(0.5, 0.9, 1.0, 1)
+
+[node name="TransitEtaLabel" type="Label" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent/TransitInfoPanel"]
+text = "ETA: —"
+horizontal_alignment = 1
+
+[node name="TransitRouteLabel" type="Label" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent/TransitInfoPanel"]
+text = ""
+horizontal_alignment = 1
+modulate = Color(0.8, 0.8, 0.8, 1)
+
+[node name="TransitLogPanel" type="VBoxContainer" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="TransitLogTitle" type="Label" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent/TransitLogPanel"]
+text = "── 通讯频道 ──"
+horizontal_alignment = 1
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="LogBox" type="RichTextLabel" parent="UI/MainScreen/VisualCenter/TransitView/TransitBg/TransitContent/TransitLogPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_following = true
+
+[node name="BottomPanel" type="PanelContainer" parent="UI/MainScreen"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -240.0
+grow_vertical = 0
+
+[node name="TabContainer" type="TabContainer" parent="UI/MainScreen/BottomPanel"]
+layout_mode = 2
+tab_alignment = 0
+
+[node name="TabSlots" type="Control" parent="UI/MainScreen/BottomPanel/TabContainer"]
+layout_mode = 2
+metadata/_tab_title = "舰体情况"
+
+[node name="SlotScroll" type="ScrollContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabSlots"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="SlotHBox" type="HBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabSlots/SlotScroll"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="TabCargo" type="Control" parent="UI/MainScreen/BottomPanel/TabContainer"]
+layout_mode = 2
+metadata/_tab_title = "货仓"
+
+[node name="CargoHBox" type="HBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 20
+
+[node name="EquipSection" type="VBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="EquipBg" type="TextureRect" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("9")
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="EquipTitle" type="Label" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection"]
+text = "装备仓"
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="EquipGrid" type="GridContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection"]
+layout_mode = 2
+columns = 10
+
+[node name="EquipActionRow" type="HBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SlotOption" type="OptionButton" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection/EquipActionRow"]
+custom_minimum_size = Vector2(100, 32)
+text = "舰头"
+
+[node name="EquipBtn" type="Button" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection/EquipActionRow"]
+custom_minimum_size = Vector2(80, 32)
+text = "装 配"
+
+[node name="UnequipBtn" type="Button" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/EquipSection/EquipActionRow"]
+custom_minimum_size = Vector2(80, 32)
+text = "卸 载"
+
+[node name="OreSection" type="VBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="OreBg" type="TextureRect" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/OreSection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("8")
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="OreTitle" type="Label" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/OreSection"]
+text = "矿石仓"
+modulate = Color(0.9, 0.85, 0.5, 1)
+
+[node name="OreBars" type="VBoxContainer" parent="UI/MainScreen/BottomPanel/TabContainer/TabCargo/CargoHBox/OreSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NotificationLabel" type="Label" parent="UI/MainScreen"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -260.0
+offset_right = 200.0
+offset_bottom = -228.0
+visible = false
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 15
+
+[node name="NotificationTimer" type="Timer" parent="UI/MainScreen"]
+one_shot = true
+
+[node name="ErrorPopup" type="AcceptDialog" parent="UI"]
+title = "错误"

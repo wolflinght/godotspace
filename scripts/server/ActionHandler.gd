@@ -47,23 +47,172 @@ const COMPONENT_DATA = {
 	"CGO-T3-001": {"name": "维度跃迁货舱", "slots": ["cabin"], "cost": 7, "p_cost": 30, "cargo_cap": 500, "prefix": "none"},
 }
 
+# POI 资源产出配置（资源类型列表，第一个为主产出，多个时按权重随机）
+# 格式: poi_id -> [resource_type, ...]  权重均等，多个相同条目提高概率
+const POI_RESOURCES = {
+	# 天鹅座
+	"CYG-SS-01": [],          # 空间站，无采矿
+	"CYG-SS-02": [],
+	"CYG-SS-03": [],
+	"CYG-PL-01": ["钛", "钛", "钛"],                        # 塔洛斯碎石星：纯钛
+	"CYG-PL-02": ["钛", "钛"],                              # 西风-7：钛（气态巨星，低产）
+	"CYG-MO-01": ["钛"],                                    # 灰烬卫星：钛
+	"CYG-AS-01": ["钛", "钛", "暗面废料"],                  # 碎石带：钛为主，少量废料
+	"CYG-RU-01": ["暗面废料", "暗面废料"],                  # 船坟：废料
+	"CYG-RU-02": ["精炼钛", "暗面废料"],                    # 精炼厂废墟：精炼钛+废料
+	"CYG-ST-01": ["精炼钛", "精炼钛", "精炼钛"],            # X-1白矮星：高危高回报精炼钛
+	# 猎户座
+	"ORI-SS-01": [],
+	"ORI-SS-02": [],
+	"ORI-SS-03": [],
+	"ORI-PL-01": ["铱", "铱", "铱"],                        # 赫菲斯托斯：铱
+	"ORI-PL-02": ["铱", "铱"],                              # 翠绿-Sigma：铱
+	"ORI-PL-03": ["铱", "铱", "铱"],                        # 卡拉克沙海：铱
+	"ORI-MO-01": ["铱"],                                    # 欧罗巴冰卫：铱
+	"ORI-AS-01": ["铱", "暗面废料"],                        # 战备封锁线：铱+废料
+	"ORI-RU-01": ["暗面废料", "暗面废料", "暗面废料"],      # 奥林匹斯残骸：废料
+	"ORI-RU-02": ["精炼铱", "精炼铱"],                      # 方尖碑遗址：精炼铱
+	"ORI-ST-01": ["精炼铱", "精炼铱", "精炼铱"],            # 参宿七蓝巨星：精炼铱
+	"ORI-ST-02": ["铱"],                                    # 余烬红矮星：铱（低光照）
+}
+
 # 骨架容量上限（T1默认值）
 const SKELETON_CAPACITY = {
 	"nose": 8, "wings": 8, "hull": 10, "tail": 6, "core": 6, "cabin": 8
 }
 
-# POI 距离矩阵（从 map.md 提取，天鹅座）
+# POI 距离矩阵（天鹅座 10×10 + 猎户座 12×12，来自 map.md）
+# 矩阵对称，_get_distance() 会自动双向查找
 const DISTANCE_MATRIX = {
-	"CYG-ST-01": {"CYG-PL-01": 15, "CYG-PL-02": 20, "CYG-ST-02": 25, "CYG-AST-01": 22, "CYG-WRK-01": 28, "CYG-STR-01": 40},
-	"CYG-ST-02": {"CYG-PL-01": 18, "CYG-PL-02": 12, "CYG-ST-01": 25, "CYG-AST-01": 10, "CYG-WRK-01": 8, "CYG-STR-01": 30},
+	# 天鹅座（CYG）
+	"CYG-SS-01": {
+		"CYG-SS-02": 35, "CYG-SS-03": 25, "CYG-PL-01": 8,  "CYG-PL-02": 22,
+		"CYG-MO-01": 10, "CYG-AS-01": 15, "CYG-RU-01": 28, "CYG-RU-02": 18, "CYG-ST-01": 45
+	},
+	"CYG-SS-02": {
+		"CYG-SS-01": 35, "CYG-SS-03": 30, "CYG-PL-01": 28, "CYG-PL-02": 12,
+		"CYG-MO-01": 30, "CYG-AS-01": 25, "CYG-RU-01": 40, "CYG-RU-02": 32, "CYG-ST-01": 38
+	},
+	"CYG-SS-03": {
+		"CYG-SS-01": 25, "CYG-SS-02": 30, "CYG-PL-01": 22, "CYG-PL-02": 26,
+		"CYG-MO-01": 24, "CYG-AS-01": 18, "CYG-RU-01": 12, "CYG-RU-02": 20, "CYG-ST-01": 50
+	},
+	"CYG-PL-01": {
+		"CYG-SS-01": 8,  "CYG-SS-02": 28, "CYG-SS-03": 22, "CYG-PL-02": 18,
+		"CYG-MO-01": 3,  "CYG-AS-01": 10, "CYG-RU-01": 25, "CYG-RU-02": 15, "CYG-ST-01": 40
+	},
+	"CYG-PL-02": {
+		"CYG-SS-01": 22, "CYG-SS-02": 12, "CYG-SS-03": 26, "CYG-PL-01": 18,
+		"CYG-MO-01": 20, "CYG-AS-01": 22, "CYG-RU-01": 35, "CYG-RU-02": 28, "CYG-ST-01": 35
+	},
+	"CYG-MO-01": {
+		"CYG-SS-01": 10, "CYG-SS-02": 30, "CYG-SS-03": 24, "CYG-PL-01": 3,  "CYG-PL-02": 20,
+		"CYG-AS-01": 12, "CYG-RU-01": 26, "CYG-RU-02": 16, "CYG-ST-01": 42
+	},
+	"CYG-AS-01": {
+		"CYG-SS-01": 15, "CYG-SS-02": 25, "CYG-SS-03": 18, "CYG-PL-01": 10, "CYG-PL-02": 22,
+		"CYG-MO-01": 12, "CYG-RU-01": 20, "CYG-RU-02": 12, "CYG-ST-01": 38
+	},
+	"CYG-RU-01": {
+		"CYG-SS-01": 28, "CYG-SS-02": 40, "CYG-SS-03": 12, "CYG-PL-01": 25, "CYG-PL-02": 35,
+		"CYG-MO-01": 26, "CYG-AS-01": 20, "CYG-RU-02": 25, "CYG-ST-01": 55
+	},
+	"CYG-RU-02": {
+		"CYG-SS-01": 18, "CYG-SS-02": 32, "CYG-SS-03": 20, "CYG-PL-01": 15, "CYG-PL-02": 28,
+		"CYG-MO-01": 16, "CYG-AS-01": 12, "CYG-RU-01": 25, "CYG-ST-01": 46
+	},
+	"CYG-ST-01": {
+		"CYG-SS-01": 45, "CYG-SS-02": 38, "CYG-SS-03": 50, "CYG-PL-01": 40, "CYG-PL-02": 35,
+		"CYG-MO-01": 42, "CYG-AS-01": 38, "CYG-RU-01": 55, "CYG-RU-02": 46
+	},
+	# 猎户座（ORI）
+	"ORI-SS-01": {
+		"ORI-SS-02": 70, "ORI-SS-03": 35, "ORI-PL-01": 18, "ORI-PL-02": 45, "ORI-PL-03": 12,
+		"ORI-MO-01": 48, "ORI-AS-01": 25, "ORI-RU-01": 40, "ORI-RU-02": 55, "ORI-ST-01": 80, "ORI-ST-02": 65
+	},
+	"ORI-SS-02": {
+		"ORI-SS-01": 70, "ORI-SS-03": 40, "ORI-PL-01": 55, "ORI-PL-02": 22, "ORI-PL-03": 65,
+		"ORI-MO-01": 15, "ORI-AS-01": 35, "ORI-RU-01": 50, "ORI-RU-02": 45, "ORI-ST-01": 25, "ORI-ST-02": 75
+	},
+	"ORI-SS-03": {
+		"ORI-SS-01": 35, "ORI-SS-02": 40, "ORI-PL-01": 28, "ORI-PL-02": 32, "ORI-PL-03": 38,
+		"ORI-MO-01": 35, "ORI-AS-01": 15, "ORI-RU-01": 20, "ORI-RU-02": 30, "ORI-ST-01": 55, "ORI-ST-02": 45
+	},
+	"ORI-PL-01": {
+		"ORI-SS-01": 18, "ORI-SS-02": 55, "ORI-SS-03": 28, "ORI-PL-02": 38, "ORI-PL-03": 22,
+		"ORI-MO-01": 42, "ORI-AS-01": 20, "ORI-RU-01": 35, "ORI-RU-02": 48, "ORI-ST-01": 70, "ORI-ST-02": 55
+	},
+	"ORI-PL-02": {
+		"ORI-SS-01": 45, "ORI-SS-02": 22, "ORI-SS-03": 32, "ORI-PL-01": 38, "ORI-PL-03": 50,
+		"ORI-MO-01": 4,  "ORI-AS-01": 28, "ORI-RU-01": 42, "ORI-RU-02": 35, "ORI-ST-01": 40, "ORI-ST-02": 60
+	},
+	"ORI-PL-03": {
+		"ORI-SS-01": 12, "ORI-SS-02": 65, "ORI-SS-03": 38, "ORI-PL-01": 22, "ORI-PL-02": 50,
+		"ORI-MO-01": 52, "ORI-AS-01": 30, "ORI-RU-01": 45, "ORI-RU-02": 60, "ORI-ST-01": 75, "ORI-ST-02": 68
+	},
+	"ORI-MO-01": {
+		"ORI-SS-01": 48, "ORI-SS-02": 15, "ORI-SS-03": 35, "ORI-PL-01": 42, "ORI-PL-02": 4,  "ORI-PL-03": 52,
+		"ORI-AS-01": 32, "ORI-RU-01": 46, "ORI-RU-02": 38, "ORI-ST-01": 38, "ORI-ST-02": 62
+	},
+	"ORI-AS-01": {
+		"ORI-SS-01": 25, "ORI-SS-02": 35, "ORI-SS-03": 15, "ORI-PL-01": 20, "ORI-PL-02": 28, "ORI-PL-03": 30,
+		"ORI-MO-01": 32, "ORI-RU-01": 18, "ORI-RU-02": 35, "ORI-ST-01": 50, "ORI-ST-02": 48
+	},
+	"ORI-RU-01": {
+		"ORI-SS-01": 40, "ORI-SS-02": 50, "ORI-SS-03": 20, "ORI-PL-01": 35, "ORI-PL-02": 42, "ORI-PL-03": 45,
+		"ORI-MO-01": 46, "ORI-AS-01": 18, "ORI-RU-02": 25, "ORI-ST-01": 65, "ORI-ST-02": 35
+	},
+	"ORI-RU-02": {
+		"ORI-SS-01": 55, "ORI-SS-02": 45, "ORI-SS-03": 30, "ORI-PL-01": 48, "ORI-PL-02": 35, "ORI-PL-03": 60,
+		"ORI-MO-01": 38, "ORI-AS-01": 35, "ORI-RU-01": 25, "ORI-ST-01": 55, "ORI-ST-02": 15
+	},
+	"ORI-ST-01": {
+		"ORI-SS-01": 80, "ORI-SS-02": 25, "ORI-SS-03": 55, "ORI-PL-01": 70, "ORI-PL-02": 40, "ORI-PL-03": 75,
+		"ORI-MO-01": 38, "ORI-AS-01": 50, "ORI-RU-01": 65, "ORI-RU-02": 55, "ORI-ST-02": 85
+	},
+	"ORI-ST-02": {
+		"ORI-SS-01": 65, "ORI-SS-02": 75, "ORI-SS-03": 45, "ORI-PL-01": 55, "ORI-PL-02": 60, "ORI-PL-03": 68,
+		"ORI-MO-01": 62, "ORI-AS-01": 48, "ORI-RU-01": 35, "ORI-RU-02": 15, "ORI-ST-01": 85
+	},
 }
 
 # POI 危险度
 const POI_DANGER = {
-	"CYG-ST-01": 0, "CYG-ST-02": 0,
-	"CYG-PL-01": 1, "CYG-PL-02": 0,
-	"CYG-AST-01": 3, "CYG-WRK-01": 4,
-	"CYG-STR-01": 5,
+	# 天鹅座
+	"CYG-SS-01": 0, "CYG-SS-02": 1, "CYG-SS-03": 2,
+	"CYG-PL-01": 1, "CYG-PL-02": 2, "CYG-MO-01": 0,
+	"CYG-AS-01": 3, "CYG-RU-01": 4, "CYG-RU-02": 4, "CYG-ST-01": 5,
+	# 猎户座
+	"ORI-SS-01": 1, "ORI-SS-02": 1, "ORI-SS-03": 2,
+	"ORI-PL-01": 4, "ORI-PL-02": 4, "ORI-PL-03": 3,
+	"ORI-MO-01": 3, "ORI-AS-01": 4, "ORI-RU-01": 4, "ORI-RU-02": 5,
+	"ORI-ST-01": 5, "ORI-ST-02": 2,
+}
+
+# POI 基本信息（名称、是否为空间站、光照强度）
+const POI_INFO = {
+	"CYG-SS-01": {"name": "铁砧-IV 采掘前哨", "is_station": true,  "light": "mid"},
+	"CYG-SS-02": {"name": "折光 科考平台",     "is_station": true,  "light": "mid"},
+	"CYG-SS-03": {"name": "锈蚀深渊 走私港",   "is_station": true,  "light": "low"},
+	"CYG-PL-01": {"name": "塔洛斯 碎石星",     "is_station": false, "light": "mid"},
+	"CYG-PL-02": {"name": "西风-7 气态巨星",   "is_station": false, "light": "high"},
+	"CYG-MO-01": {"name": "灰烬 T-09",         "is_station": false, "light": "mid"},
+	"CYG-AS-01": {"name": "阿尔法碎石带",       "is_station": false, "light": "mid"},
+	"CYG-RU-01": {"name": "第17号船坟地带",     "is_station": false, "light": "low"},
+	"CYG-RU-02": {"name": "废弃同位素精炼厂",   "is_station": false, "light": "low"},
+	"CYG-ST-01": {"name": "天鹅座 X-1 白矮星", "is_station": false, "light": "extreme"},
+	"ORI-SS-01": {"name": "无畏堡垒 星港",      "is_station": true,  "light": "mid"},
+	"ORI-SS-02": {"name": "耀斑枢纽 星港",      "is_station": true,  "light": "mid"},
+	"ORI-SS-03": {"name": "折射点 自由港",      "is_station": true,  "light": "low"},
+	"ORI-PL-01": {"name": "赫菲斯托斯 燃烧星", "is_station": false, "light": "high"},
+	"ORI-PL-02": {"name": "翠绿-Sigma 生态星", "is_station": false, "light": "mid"},
+	"ORI-PL-03": {"name": "卡拉克 沙海星",     "is_station": false, "light": "high"},
+	"ORI-MO-01": {"name": "欧罗巴二型 冰卫",   "is_station": false, "light": "low"},
+	"ORI-AS-01": {"name": "柯伊伯战备封锁线",   "is_station": false, "light": "mid"},
+	"ORI-RU-01": {"name": "奥林匹斯 战舰残骸带","is_station": false, "light": "low"},
+	"ORI-RU-02": {"name": "远古方尖碑遗址",     "is_station": false, "light": "low"},
+	"ORI-ST-01": {"name": "参宿七 狂暴蓝巨星", "is_station": false, "light": "extreme"},
+	"ORI-ST-02": {"name": "余烬-9 红矮星",     "is_station": false, "light": "low"},
 }
 
 static func handle_depart(peer_id: int, player: Dictionary, payload: Dictionary, db: DatabaseManager, server: Node) -> void:
@@ -87,9 +236,20 @@ static func handle_depart(peer_id: int, player: Dictionary, payload: Dictionary,
 		server.send_to_peer(peer_id, {"type": "error", "message": "无法计算航行距离"})
 		return
 
-	# 计算耗电
+	# 计算耗电（含奇点4件-50%、节能调度-15%）
 	var p_cost_total = _calc_p_cost(player)
-	var total_power_cost = distance * 10 + p_cost_total
+	var base_dist_cost = distance * 10
+	# 奇点4件：组件耗电-50%
+	if _count_prefix(player, "singularity") >= 4:
+		p_cost_total = int(p_cost_total * 0.5)
+	# 节能调度（轮机长T1）：基础距离耗电-15%
+	if _has_trait(player, "engineer_t1_efficient"):
+		base_dist_cost = int(base_dist_cost * 0.85)
+	var total_power_cost = base_dist_cost + p_cost_total
+
+	# 奇点2件：电力上限+500（影响 max_power，起飞前更新）
+	if _count_prefix(player, "singularity") >= 2:
+		ship["max_power"] = ship.get("max_power", 500) + 500
 
 	# 检查电力是否足够
 	var current_power = ship.get("power", 0)
@@ -102,6 +262,9 @@ static func handle_depart(peer_id: int, player: Dictionary, payload: Dictionary,
 
 	# 计算航行时间
 	var spd = _calc_ship_spd(player)
+	# 护盾极客（轮机长T2）：无护盾时SPD翻倍（影响航行速度）
+	if _has_trait(player, "engineer_t2_shield_geek") and ship.get("shield", 0) == 0:
+		spd *= 2
 	var base_minutes = distance * 2.0
 	var spd_reduction = float(spd) / (float(spd) + 200.0)
 	var travel_minutes = base_minutes * (1.0 - spd_reduction)
@@ -120,6 +283,22 @@ static func handle_depart(peer_id: int, player: Dictionary, payload: Dictionary,
 	ship["travel_distance"] = distance
 	ship["last_encounter_dist"] = 0.0
 	ship["target_danger"] = POI_DANGER.get(target_poi, 0)
+
+	# 绑定目标 POI 的采矿资源类型（随机选一种，抵达后生效）
+	var res_pool = POI_RESOURCES.get(target_poi, [])
+	if res_pool.size() > 0:
+		ship["mining_resource"] = res_pool[randi() % res_pool.size()]
+	else:
+		ship["mining_resource"] = ""
+
+	# 计算采矿速率（累加所有矿机组件）
+	var total_mining_rate: float = 0.0
+	for comp_id in player.get("components", {}).keys():
+		total_mining_rate += COMPONENT_DATA.get(comp_id, {}).get("mining_rate", 0)
+	# 铁骑4件：矿机产出+30%
+	if _count_prefix(player, "ironclad") >= 4:
+		total_mining_rate *= 1.30
+	ship["mining_rate"] = total_mining_rate
 
 	db.save_ship(ship)
 
@@ -230,26 +409,78 @@ static func handle_accept_mission(peer_id: int, player: Dictionary, payload: Dic
 	var mission_id: String = payload.get("mission_id", "")
 	var now = Time.get_unix_time_from_system()
 
-	# 检查任务是否已接取
+	# 检查任务配置是否存在
+	var config = MissionManager.MISSION_CONFIG.get(mission_id, {})
+	if config.is_empty():
+		server.send_to_peer(peer_id, {"type": "error", "message": "未知任务：" + mission_id})
+		return
+
+	# 检查任务是否已在进行中（已完成/失败的可重接）
 	for m in player.get("missions", []):
-		if m.get("mission_id") == mission_id:
-			server.send_to_peer(peer_id, {"type": "error", "message": "该任务已接取"})
+		if m.get("mission_id") == mission_id and m.get("status") == "active":
+			server.send_to_peer(peer_id, {"type": "error", "message": "该任务正在进行中"})
 			return
 
-	# 任务时限从接取时开始计算（具体时限从任务配置表读取）
-	var deadline_hours = payload.get("deadline_hours", 24)
+	var ship = player.get("ship", {})
+
+	# 前置条件校验
+	var mission_type = config.get("type", "")
+	match mission_type:
+		"delivery":
+			# 货仓空位：舰仓容量 - 已占用货物数（简化：delivery 任务占用 2 格）
+			var cargo_cap = _get_cargo_cap(player)
+			var active_deliveries = 0
+			for m in player.get("missions", []):
+				if m.get("status") == "active":
+					var mc = MissionManager.MISSION_CONFIG.get(m.get("mission_id", ""), {})
+					if mc.get("type") == "delivery":
+						active_deliveries += 1
+			var slots_used = active_deliveries * 2
+			if cargo_cap - slots_used < 2:
+				server.send_to_peer(peer_id, {"type": "error", "message": "舰仓空位不足（需要 2 格空位）"})
+				return
+		"mining":
+			# 必须装配至少 1 个矿机
+			var has_miner = false
+			for comp_id in player.get("components", {}).values():
+				if comp_id.begins_with("MIN"):
+					has_miner = true
+					break
+			if not has_miner:
+				server.send_to_peer(peer_id, {"type": "error", "message": "未装配采矿设备"})
+				return
+
+	# 使用配置里的 deadline_hours（忽略客户端传来的，以服务端为准）
+	var deadline_hours = config.get("deadline_hours", 24)
 	var deadline = now + deadline_hours * 3600.0
 
-	player["missions"].append({
-		"mission_id": mission_id,
-		"status": "active",
-		"accepted_at": now,
-		"progress": 0,
-		"deadline": deadline
-	})
+	# 如果已有同 mission_id 的旧记录（已完成/失败），更新而非插入
+	var existing = false
+	for m in player.get("missions", []):
+		if m.get("mission_id") == mission_id:
+			m["status"] = "active"
+			m["accepted_at"] = now
+			m["progress"] = 0
+			m["deadline"] = deadline
+			existing = true
+			break
 
-	db._query("INSERT INTO missions (player_id, mission_id, status, accepted_at, progress, deadline) VALUES (%d, '%s', 'active', %f, 0, %f)" % [
-		player.get("player_id", 0), mission_id, now, deadline
+	if not existing:
+		player["missions"].append({
+			"mission_id": mission_id,
+			"status": "active",
+			"accepted_at": now,
+			"progress": 0,
+			"deadline": deadline
+		})
+
+	var player_id = player.get("player_id", 0)
+	# 先删除旧记录（已完成/失败），再插入新记录
+	db._query("DELETE FROM missions WHERE player_id=%d AND mission_id='%s' AND status!='active'" % [
+		player_id, mission_id
+	])
+	db._query("INSERT IGNORE INTO missions (player_id, mission_id, status, accepted_at, progress, deadline) VALUES (%d, '%s', 'active', %f, 0, %f)" % [
+		player_id, mission_id, now, deadline
 	])
 
 	server.send_to_peer(peer_id, {"type": "action_result", "action": "accept_mission", "success": true, "mission_id": mission_id, "deadline": deadline})
@@ -288,7 +519,7 @@ static func handle_connect_grid(peer_id: int, player: Dictionary, _payload: Dict
 
 	# 检查当前 POI 是否是空间站
 	var current_poi = ship.get("current_poi", "")
-	if not current_poi.contains("-ST-"):
+	if not POI_INFO.get(current_poi, {}).get("is_station", false):
 		server.send_to_peer(peer_id, {"type": "error", "message": "只能在空间站连接电网"})
 		return
 
@@ -300,22 +531,204 @@ static func handle_connect_grid(peer_id: int, player: Dictionary, _payload: Dict
 		"message": "已连接电网，充电速率 10 电力/分钟"
 	})
 
+# 船员特性配置表
+const CREW_TRAITS = {
+	"captain_t1_ironclad": {
+		"role": "captain", "tier": "T1", "salary": 50,
+		"name": "阵营拥趸-铁骑", "desc": "每有一件[铁骑]前缀组件，防御力+5"
+	},
+	"captain_t2_lone_wolf": {
+		"role": "captain", "tier": "T2", "salary": 150,
+		"name": "独狼战术", "desc": "仅1名船员时，全体武器伤害+40%"
+	},
+	"captain_t3_capitalist": {
+		"role": "captain", "tier": "T3", "salary": 500,
+		"name": "资本家", "desc": "所有薪水减半，遭遇战星币+30%"
+	},
+	"gunner_t1_kinetic": {
+		"role": "gunner", "tier": "T1", "salary": 50,
+		"name": "动能偏执狂", "desc": "[动能]武器伤害+20%，无法装[电磁]武器"
+	},
+	"gunner_t2_overload": {
+		"role": "gunner", "tier": "T2", "salary": 150,
+		"name": "过载狂人", "desc": "武器伤害+50%，每次开火自损10HP"
+	},
+	"gunner_t3_singularity": {
+		"role": "gunner", "tier": "T3", "salary": 500,
+		"name": "奇点锁定", "desc": "首回合[奇点]武器必暴击且无视闪避"
+	},
+	"engineer_t1_efficient": {
+		"role": "engineer", "tier": "T1", "salary": 50,
+		"name": "节能调度", "desc": "航行基础耗电降低15%"
+	},
+	"engineer_t2_shield_geek": {
+		"role": "engineer", "tier": "T2", "salary": 150,
+		"name": "护盾极客", "desc": "无护盾组件时，速度(SPD)翻倍"
+	},
+	"engineer_t3_jump_resonance": {
+		"role": "engineer", "tier": "T3", "salary": 500,
+		"name": "跃迁引擎共鸣", "desc": "跃迁耗电-500，抛锚时缓慢自动回电"
+	},
+}
+
+# 招募费用（按品级）
+const RECRUIT_COST = {"T1": 300, "T2": 800, "T3": 2500}
+
+# 默认船员名字库（无 AI 时使用）
+const DEFAULT_NAMES = {
+	"captain": ["钢铁舰长 Rex", "指挥官 Vega", "舰长 Kira", "统帅 Dorn"],
+	"gunner":  ["炮手 Zeke", "神枪 Lyra", "爆破手 Ash", "炮兵 Cruz"],
+	"engineer":["轮机长 Bolt", "工程师 Nova", "技师 Finn", "机械师 Renn"],
+}
+
+static func handle_recruit(peer_id: int, player: Dictionary, payload: Dictionary, db: DatabaseManager, server: Node) -> void:
+	var ship = player.get("ship", {})
+	# 只能在空间站招募
+	var current_poi = ship.get("current_poi", "")
+	if not POI_INFO.get(current_poi, {}).get("is_station", false):
+		server.send_to_peer(peer_id, {"type": "error", "message": "只能在空间站酒馆招募船员"})
+		return
+
+	var role: String = payload.get("role", "")
+	var tier: String = payload.get("tier", "T1")
+
+	if role not in ["captain", "gunner", "engineer"]:
+		server.send_to_peer(peer_id, {"type": "error", "message": "无效岗位"})
+		return
+
+	# 检查该岗位是否已有船员
+	for c in player.get("crew", []):
+		if c.get("slot") == role:
+			server.send_to_peer(peer_id, {"type": "error", "message": "该岗位已有船员，请先解雇"})
+			return
+
+	# 检查星币
+	var cost = RECRUIT_COST.get(tier, 300)
+	if ship.get("credits", 0) < cost:
+		server.send_to_peer(peer_id, {"type": "error", "message": "星币不足，需要 %d" % cost})
+		return
+
+	# 随机抽取该岗位+品级的特性
+	var matching_traits = []
+	for trait_id in CREW_TRAITS.keys():
+		var t = CREW_TRAITS[trait_id]
+		if t["role"] == role and t["tier"] == tier:
+			matching_traits.append(trait_id)
+
+	if matching_traits.is_empty():
+		server.send_to_peer(peer_id, {"type": "error", "message": "无可用特性"})
+		return
+
+	var trait_id = matching_traits[randi() % matching_traits.size()]
+	var trait_data = CREW_TRAITS[trait_id]
+	var salary = trait_data["salary"]
+	var player_id = player.get("player_id", 0)
+
+	# 扣星币（先扣，防止重复招募）
+	ship["credits"] -= cost
+	db._query("UPDATE ships SET credits=credits-%d WHERE player_id=%d" % [cost, player_id])
+
+	# 角色名称映射
+	var role_cn = {"captain": "舰长", "gunner": "炮手", "engineer": "轮机长"}.get(role, role)
+	var tier_cn = {"T1": "T1（资深）", "T2": "T2（精英）", "T3": "T3（传奇）"}.get(tier, tier)
+
+	# 尝试用 Gemini 生成人设，失败则用默认随机名
+	var gemini: GeminiClient = server.get_gemini() if server.has_method("get_gemini") else null
+	if gemini != null:
+		gemini.generate_crew(role_cn, tier_cn, trait_data["desc"], func(ai_data):
+			var crew_name: String
+			var backstory: String = ""
+			var catchphrase: String = ""
+			if ai_data is Dictionary:
+				crew_name = ai_data.get("name", "")
+				backstory = ai_data.get("backstory", "")
+				catchphrase = ai_data.get("catchphrase", "")
+			if crew_name == "":
+				var names = DEFAULT_NAMES.get(role, ["未知船员"])
+				crew_name = names[randi() % names.size()]
+			_finish_recruit(peer_id, player, ship, db, server, role, tier, trait_id, trait_data, crew_name, backstory, catchphrase, salary, cost)
+		)
+	else:
+		var names = DEFAULT_NAMES.get(role, ["未知船员"])
+		var crew_name = names[randi() % names.size()]
+		_finish_recruit(peer_id, player, ship, db, server, role, tier, trait_id, trait_data, crew_name, "", "", salary, cost)
+
+static func _finish_recruit(peer_id: int, player: Dictionary, ship: Dictionary, db: DatabaseManager, server: Node,
+		role: String, tier: String, trait_id: String, trait_data: Dictionary,
+		crew_name: String, backstory: String, catchphrase: String, salary: int, cost: int) -> void:
+	var player_id = player.get("player_id", 0)
+	db._query("INSERT INTO crew (player_id, slot, tier, trait_id, name, backstory, catchphrase, salary, debt) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', %d, 0)" % [
+		player_id, role, tier, trait_id,
+		db._escape(crew_name), db._escape(backstory), db._escape(catchphrase), salary
+	])
+	var new_crew = {
+		"slot": role, "tier": tier, "trait_id": trait_id,
+		"name": crew_name, "backstory": backstory, "catchphrase": catchphrase,
+		"salary": salary, "debt": 0
+	}
+	player["crew"].append(new_crew)
+	server.send_to_peer(peer_id, {
+		"type": "action_result", "action": "recruit", "success": true,
+		"crew": new_crew, "cost": cost, "trait_desc": trait_data["desc"]
+	})
+
+static func handle_fire_crew(peer_id: int, player: Dictionary, payload: Dictionary, db: DatabaseManager, server: Node) -> void:
+	var role: String = payload.get("role", "")
+	var player_id = player.get("player_id", 0)
+
+	var found = false
+	var new_crew = []
+	for c in player.get("crew", []):
+		if c.get("slot") == role:
+			found = true
+		else:
+			new_crew.append(c)
+
+	if not found:
+		server.send_to_peer(peer_id, {"type": "error", "message": "该岗位没有船员"})
+		return
+
+	player["crew"] = new_crew
+	db._query("DELETE FROM crew WHERE player_id=%d AND slot='%s'" % [player_id, role])
+
+	server.send_to_peer(peer_id, {"type": "action_result", "action": "fire_crew", "success": true, "role": role})
+
 static func handle_sos(peer_id: int, player: Dictionary, _payload: Dictionary, _db: DatabaseManager, server: Node) -> void:
 	var ship = player.get("ship", {})
 	if ship.get("status", "") != "stranded":
 		server.send_to_peer(peer_id, {"type": "error", "message": "只有抛锚状态才能发射 SOS 信标"})
 		return
 
-	# 生成 SOS 文本（调用 AI 节点，此处简化为固定文本）
 	var captain_name = _get_captain_name(player)
 	var poi = ship.get("current_poi", "未知位置")
-	var sos_text = "[SOS] %s 在 %s 抛锚，急需电力支援！" % [captain_name, poi]
+	var poi_name = POI_INFO.get(poi, {}).get("name", poi)
 
-	# 广播给全服（此处简化，实际需要广播给所有在线玩家）
+	# 获取舰长背景故事
+	var backstory = ""
+	for c in player.get("crew", []):
+		if c.get("slot") == "captain":
+			backstory = c.get("backstory", "")
+			break
+
+	var gemini: GeminiClient = server.get_gemini() if server.has_method("get_gemini") else null
+	var fallback_text = "[SOS] 舰长「%s」的飞船在【%s】附近失去动力，急需电力支援！" % [captain_name, poi_name]
+
+	# 回复发送者（先发确认）
 	server.send_to_peer(peer_id, {
-		"type": "action_result", "action": "sos", "success": true,
-		"sos_text": sos_text
+		"type": "action_result", "action": "sos", "success": true
 	})
+
+	if gemini != null:
+		gemini.generate_sos(captain_name, poi_name, backstory, func(text):
+			var sos_text = text if (text != null and text != "") else fallback_text
+			server.broadcast_event("sos_distress", {
+				"message": sos_text, "poi": poi, "sender_id": player.get("player_id", 0)
+			}, peer_id)
+		)
+	else:
+		server.broadcast_event("sos_distress", {
+			"message": fallback_text, "poi": poi, "sender_id": player.get("player_id", 0)
+		}, peer_id)
 
 # 工具函数
 
@@ -344,6 +757,37 @@ static func _get_fuel_ratio(player: Dictionary) -> int:
 		if ratio > 0:
 			return ratio
 	return 0
+
+static func _count_prefix(player: Dictionary, prefix: String) -> int:
+	var count = 0
+	for comp_id in player.get("components", {}).keys():
+		if COMPONENT_DATA.get(comp_id, {}).get("prefix", "") == prefix:
+			count += 1
+	return count
+
+static func _has_trait(player: Dictionary, trait_id: String) -> bool:
+	for c in player.get("crew", []):
+		if c.get("trait_id", "") == trait_id:
+			return true
+	return false
+
+static func _get_nearest_station(from_poi: String) -> String:
+	var best_poi = "CYG-SS-01"
+	var best_dist = 999999
+	for poi_id in POI_INFO.keys():
+		if not POI_INFO[poi_id].get("is_station", false):
+			continue
+		var d = _get_distance(from_poi, poi_id)
+		if d < best_dist:
+			best_dist = d
+			best_poi = poi_id
+	return best_poi
+
+static func _get_cargo_cap(player: Dictionary) -> int:
+	var cap = 0
+	for comp_id in player.get("components", {}).keys():
+		cap += COMPONENT_DATA.get(comp_id, {}).get("cargo_cap", 0)
+	return cap
 
 static func _get_captain_name(player: Dictionary) -> String:
 	for crew in player.get("crew", []):

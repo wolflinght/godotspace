@@ -1,0 +1,578 @@
+[
+  {
+    "file": "x0028_y0017_w1999_h0201_top_status_bar_full.png",
+    "original_file": "top_status_bar_full.png",
+    "x": 28,
+    "y": 17,
+    "w": 1999,
+    "h": 201,
+    "source_bounds": [
+      28,
+      17,
+      1999,
+      201
+    ],
+    "size": [
+      1999,
+      201
+    ]
+  },
+  {
+    "file": "x0028_y0275_w0339_h0164_status_ship_docked_card.png",
+    "original_file": "status_ship_docked_card.png",
+    "x": 28,
+    "y": 275,
+    "w": 339,
+    "h": 164,
+    "source_bounds": [
+      28,
+      275,
+      339,
+      164
+    ],
+    "size": [
+      339,
+      164
+    ]
+  },
+  {
+    "file": "x0390_y0275_w0325_h0164_status_location_card.png",
+    "original_file": "status_location_card.png",
+    "x": 390,
+    "y": 275,
+    "w": 325,
+    "h": 164,
+    "source_bounds": [
+      390,
+      275,
+      325,
+      164
+    ],
+    "size": [
+      325,
+      164
+    ]
+  },
+  {
+    "file": "x0740_y0275_w0313_h0164_status_energy_card.png",
+    "original_file": "status_energy_card.png",
+    "x": 740,
+    "y": 275,
+    "w": 313,
+    "h": 164,
+    "source_bounds": [
+      740,
+      275,
+      313,
+      164
+    ],
+    "size": [
+      313,
+      164
+    ]
+  },
+  {
+    "file": "x1077_y0275_w0318_h0164_status_durability_card.png",
+    "original_file": "status_durability_card.png",
+    "x": 1077,
+    "y": 275,
+    "w": 318,
+    "h": 164,
+    "source_bounds": [
+      1077,
+      275,
+      318,
+      164
+    ],
+    "size": [
+      318,
+      164
+    ]
+  },
+  {
+    "file": "x1419_y0275_w0307_h0164_status_storage_card.png",
+    "original_file": "status_storage_card.png",
+    "x": 1419,
+    "y": 275,
+    "w": 307,
+    "h": 164,
+    "source_bounds": [
+      1419,
+      275,
+      307,
+      164
+    ],
+    "size": [
+      307,
+      164
+    ]
+  },
+  {
+    "file": "x1749_y0275_w0271_h0164_status_currency_card.png",
+    "original_file": "status_currency_card.png",
+    "x": 1749,
+    "y": 275,
+    "w": 271,
+    "h": 164,
+    "source_bounds": [
+      1749,
+      275,
+      271,
+      164
+    ],
+    "size": [
+      271,
+      164
+    ]
+  },
+  {
+    "file": "x0032_y0492_w0418_h0117_tab_hull_status_inactive.png",
+    "original_file": "tab_hull_status_inactive.png",
+    "x": 32,
+    "y": 492,
+    "w": 418,
+    "h": 117,
+    "source_bounds": [
+      32,
+      492,
+      418,
+      117
+    ],
+    "size": [
+      418,
+      117
+    ]
+  },
+  {
+    "file": "x0469_y0492_w0372_h0117_tab_cargo_inactive.png",
+    "original_file": "tab_cargo_inactive.png",
+    "x": 469,
+    "y": 492,
+    "w": 372,
+    "h": 117,
+    "source_bounds": [
+      469,
+      492,
+      372,
+      117
+    ],
+    "size": [
+      372,
+      117
+    ]
+  },
+  {
+    "file": "x0860_y0492_w0368_h0117_tab_modules_inactive.png",
+    "original_file": "tab_modules_inactive.png",
+    "x": 860,
+    "y": 492,
+    "w": 368,
+    "h": 117,
+    "source_bounds": [
+      860,
+      492,
+      368,
+      117
+    ],
+    "size": [
+      368,
+      117
+    ]
+  },
+  {
+    "file": "x1248_y0492_w0359_h0117_tab_starmap_inactive.png",
+    "original_file": "tab_starmap_inactive.png",
+    "x": 1248,
+    "y": 492,
+    "w": 359,
+    "h": 117,
+    "source_bounds": [
+      1248,
+      492,
+      359,
+      117
+    ],
+    "size": [
+      359,
+      117
+    ]
+  },
+  {
+    "file": "x1627_y0492_w0385_h0117_tab_missions_inactive.png",
+    "original_file": "tab_missions_inactive.png",
+    "x": 1627,
+    "y": 492,
+    "w": 385,
+    "h": 117,
+    "source_bounds": [
+      1627,
+      492,
+      385,
+      117
+    ],
+    "size": [
+      385,
+      117
+    ]
+  },
+  {
+    "file": "x0032_y0650_w0420_h0117_tab_hull_status_active.png",
+    "original_file": "tab_hull_status_active.png",
+    "x": 32,
+    "y": 650,
+    "w": 420,
+    "h": 117,
+    "source_bounds": [
+      32,
+      650,
+      420,
+      117
+    ],
+    "size": [
+      420,
+      117
+    ]
+  },
+  {
+    "file": "x0471_y0650_w0370_h0117_tab_cargo_active.png",
+    "original_file": "tab_cargo_active.png",
+    "x": 471,
+    "y": 650,
+    "w": 370,
+    "h": 117,
+    "source_bounds": [
+      471,
+      650,
+      370,
+      117
+    ],
+    "size": [
+      370,
+      117
+    ]
+  },
+  {
+    "file": "x0861_y0650_w0367_h0117_tab_modules_active.png",
+    "original_file": "tab_modules_active.png",
+    "x": 861,
+    "y": 650,
+    "w": 367,
+    "h": 117,
+    "source_bounds": [
+      861,
+      650,
+      367,
+      117
+    ],
+    "size": [
+      367,
+      117
+    ]
+  },
+  {
+    "file": "x1248_y0650_w0359_h0117_tab_starmap_active.png",
+    "original_file": "tab_starmap_active.png",
+    "x": 1248,
+    "y": 650,
+    "w": 359,
+    "h": 117,
+    "source_bounds": [
+      1248,
+      650,
+      359,
+      117
+    ],
+    "size": [
+      359,
+      117
+    ]
+  },
+  {
+    "file": "x1627_y0650_w0385_h0117_tab_missions_active.png",
+    "original_file": "tab_missions_active.png",
+    "x": 1627,
+    "y": 650,
+    "w": 385,
+    "h": 117,
+    "source_bounds": [
+      1627,
+      650,
+      385,
+      117
+    ],
+    "size": [
+      385,
+      117
+    ]
+  },
+  {
+    "file": "x0032_y0821_w0929_h0655_mineral_storage_panel.png",
+    "original_file": "mineral_storage_panel.png",
+    "x": 32,
+    "y": 821,
+    "w": 929,
+    "h": 655,
+    "source_bounds": [
+      32,
+      821,
+      929,
+      655
+    ],
+    "size": [
+      929,
+      655
+    ]
+  },
+  {
+    "file": "x0986_y0821_w1030_h0655_resource_storage_panel.png",
+    "original_file": "resource_storage_panel.png",
+    "x": 986,
+    "y": 821,
+    "w": 1030,
+    "h": 655,
+    "source_bounds": [
+      986,
+      821,
+      1030,
+      655
+    ],
+    "size": [
+      1030,
+      655
+    ]
+  },
+  {
+    "file": "x0075_y0909_w0810_h0083_mineral_row_iron_ore.png",
+    "original_file": "mineral_row_iron_ore.png",
+    "x": 75,
+    "y": 909,
+    "w": 810,
+    "h": 83,
+    "source_bounds": [
+      75,
+      909,
+      810,
+      83
+    ],
+    "size": [
+      810,
+      83
+    ]
+  },
+  {
+    "file": "x0075_y0998_w0810_h0083_mineral_row_copper_ore.png",
+    "original_file": "mineral_row_copper_ore.png",
+    "x": 75,
+    "y": 998,
+    "w": 810,
+    "h": 83,
+    "source_bounds": [
+      75,
+      998,
+      810,
+      83
+    ],
+    "size": [
+      810,
+      83
+    ]
+  },
+  {
+    "file": "x0075_y1087_w0810_h0083_mineral_row_titanium_ore.png",
+    "original_file": "mineral_row_titanium_ore.png",
+    "x": 75,
+    "y": 1087,
+    "w": 810,
+    "h": 83,
+    "source_bounds": [
+      75,
+      1087,
+      810,
+      83
+    ],
+    "size": [
+      810,
+      83
+    ]
+  },
+  {
+    "file": "x0075_y1176_w0810_h0083_mineral_row_crystal.png",
+    "original_file": "mineral_row_crystal.png",
+    "x": 75,
+    "y": 1176,
+    "w": 810,
+    "h": 83,
+    "source_bounds": [
+      75,
+      1176,
+      810,
+      83
+    ],
+    "size": [
+      810,
+      83
+    ]
+  },
+  {
+    "file": "x0075_y1265_w0810_h0083_mineral_row_rare_metal.png",
+    "original_file": "mineral_row_rare_metal.png",
+    "x": 75,
+    "y": 1265,
+    "w": 810,
+    "h": 83,
+    "source_bounds": [
+      75,
+      1265,
+      810,
+      83
+    ],
+    "size": [
+      810,
+      83
+    ]
+  },
+  {
+    "file": "x0088_y0923_w0065_h0066_icon_iron_ore.png",
+    "original_file": "icon_iron_ore.png",
+    "x": 88,
+    "y": 923,
+    "w": 65,
+    "h": 66,
+    "source_bounds": [
+      88,
+      923,
+      65,
+      66
+    ],
+    "size": [
+      65,
+      66
+    ]
+  },
+  {
+    "file": "x0087_y1018_w0070_h0067_icon_copper_ore.png",
+    "original_file": "icon_copper_ore.png",
+    "x": 87,
+    "y": 1018,
+    "w": 70,
+    "h": 67,
+    "source_bounds": [
+      87,
+      1018,
+      70,
+      67
+    ],
+    "size": [
+      70,
+      67
+    ]
+  },
+  {
+    "file": "x0090_y1106_w0068_h0066_icon_titanium_ore.png",
+    "original_file": "icon_titanium_ore.png",
+    "x": 90,
+    "y": 1106,
+    "w": 68,
+    "h": 66,
+    "source_bounds": [
+      90,
+      1106,
+      68,
+      66
+    ],
+    "size": [
+      68,
+      66
+    ]
+  },
+  {
+    "file": "x0088_y1195_w0070_h0066_icon_crystal.png",
+    "original_file": "icon_crystal.png",
+    "x": 88,
+    "y": 1195,
+    "w": 70,
+    "h": 66,
+    "source_bounds": [
+      88,
+      1195,
+      70,
+      66
+    ],
+    "size": [
+      70,
+      66
+    ]
+  },
+  {
+    "file": "x0088_y1285_w0070_h0066_icon_rare_metal.png",
+    "original_file": "icon_rare_metal.png",
+    "x": 88,
+    "y": 1285,
+    "w": 70,
+    "h": 66,
+    "source_bounds": [
+      88,
+      1285,
+      70,
+      66
+    ],
+    "size": [
+      70,
+      66
+    ]
+  },
+  {
+    "file": "x1035_y0936_w0117_h0117_resource_empty_slot.png",
+    "original_file": "resource_empty_slot.png",
+    "x": 1035,
+    "y": 936,
+    "w": 117,
+    "h": 117,
+    "source_bounds": [
+      1035,
+      936,
+      117,
+      117
+    ],
+    "size": [
+      117,
+      117
+    ]
+  },
+  {
+    "file": "x1035_y0936_w0907_h0117_resource_empty_slot_row.png",
+    "original_file": "resource_empty_slot_row.png",
+    "x": 1035,
+    "y": 936,
+    "w": 907,
+    "h": 117,
+    "source_bounds": [
+      1035,
+      936,
+      907,
+      117
+    ],
+    "size": [
+      907,
+      117
+    ]
+  },
+  {
+    "file": "x1035_y0936_w0907_h0496_resource_empty_grid.png",
+    "original_file": "resource_empty_grid.png",
+    "x": 1035,
+    "y": 936,
+    "w": 907,
+    "h": 496,
+    "source_bounds": [
+      1035,
+      936,
+      907,
+      496
+    ],
+    "size": [
+      907,
+      496
+    ]
+  }
+]
