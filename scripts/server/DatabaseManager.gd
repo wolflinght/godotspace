@@ -4,15 +4,17 @@ extends Node
 # 数据库管理器 - 封装所有 MySQL 操作
 # 通过 GDScript 调用本地 mysql CLI 执行 SQL（服务端专用）
 
-const DB_HOST = "127.0.0.1"
-const DB_PORT = 3306
-const DB_NAME = "starriver"
-const DB_USER = "starriver"
-const DB_PASS = "StarRiver2026!"
-
 var _mysql_cmd: String = ""
+var _db_host: String = "127.0.0.1"
+var _db_port: int = 3306
+var _db_name: String = "starriver"
+var _db_user: String = "starriver"
+var _db_pass: String = ""
 
 func connect_db() -> bool:
+	if not _load_db_config():
+		return false
+
 	# 检查 mysql 客户端是否可用
 	var output = []
 	OS.execute("which", ["mysql"], output)
@@ -28,17 +30,72 @@ func connect_db() -> bool:
 		push_error("[DB] 数据库连接测试失败")
 		return false
 
-	print("[DB] 数据库连接成功: %s@%s/%s" % [DB_USER, DB_HOST, DB_NAME])
+	print("[DB] 数据库连接成功: %s@%s/%s" % [_db_user, _db_host, _db_name])
 	_init_poi_resources()
 	return true
 
+func _load_db_config() -> bool:
+	var config = ConfigFile.new()
+	var cfg_err = config.load("res://config/server_config.cfg")
+	if cfg_err == OK:
+		_db_host = str(config.get_value("database", "host", _db_host))
+		_db_port = int(config.get_value("database", "port", _db_port))
+		_db_name = str(config.get_value("database", "name", _db_name))
+		_db_user = str(config.get_value("database", "user", _db_user))
+
+	var dotenv = _load_dotenv()
+	_db_host = _get_secret(dotenv, ["STARRIVER_DB_HOST", "DB_HOST"], _db_host)
+	_db_name = _get_secret(dotenv, ["STARRIVER_DB_NAME", "DB_NAME"], _db_name)
+	_db_user = _get_secret(dotenv, ["STARRIVER_DB_USER", "DB_USER"], _db_user)
+
+	var port_text = _get_secret(dotenv, ["STARRIVER_DB_PORT", "DB_PORT"], str(_db_port))
+	if port_text.is_valid_int():
+		_db_port = int(port_text)
+
+	_db_pass = _get_secret(dotenv, ["STARRIVER_DB_PASSWORD", "DB_PASSWORD", "MYSQL_PWD"], "")
+	if _db_pass == "":
+		push_error("[DB] 数据库密码未配置，请设置 STARRIVER_DB_PASSWORD 环境变量或在 .env 中填写")
+		return false
+	return true
+
+func _load_dotenv() -> Dictionary:
+	var env = {}
+	if not FileAccess.file_exists("res://.env"):
+		return env
+	var file = FileAccess.open("res://.env", FileAccess.READ)
+	if file == null:
+		return env
+	while not file.eof_reached():
+		var line = file.get_line().strip_edges()
+		if line == "" or line.begins_with("#") or not line.contains("="):
+			continue
+		var parts = line.split("=", true, 1)
+		var key = parts[0].strip_edges()
+		var value = parts[1].strip_edges()
+		if value.length() >= 2:
+			var first = value.substr(0, 1)
+			var last = value.substr(value.length() - 1, 1)
+			if (first == "\"" and last == "\"") or (first == "'" and last == "'"):
+				value = value.substr(1, value.length() - 2)
+		env[key] = value
+	return env
+
+func _get_secret(dotenv: Dictionary, keys: Array, fallback: String = "") -> String:
+	for key in keys:
+		var value = OS.get_environment(str(key))
+		if value != "":
+			return value
+		if dotenv.has(key) and str(dotenv[key]) != "":
+			return str(dotenv[key])
+	return fallback
+
 func _query(sql: String) -> Array:
 	var args = [
-		"-h", DB_HOST,
-		"-P", str(DB_PORT),
-		"-u", DB_USER,
-		"-p" + DB_PASS,
-		"-D", DB_NAME,
+		"-h", _db_host,
+		"-P", str(_db_port),
+		"-u", _db_user,
+		"-p" + _db_pass,
+		"-D", _db_name,
 		"--batch",
 		"--skip-column-names",
 		"-e", sql
