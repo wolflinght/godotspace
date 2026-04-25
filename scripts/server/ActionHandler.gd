@@ -283,6 +283,8 @@ static func handle_depart(peer_id: int, player: Dictionary, payload: Dictionary,
 	ship["travel_distance"] = distance
 	ship["last_encounter_dist"] = 0.0
 	ship["target_danger"] = POI_DANGER.get(target_poi, 0)
+	ship["grid_connected"] = false
+	ship["last_grid_tick"] = 0.0
 
 	# 绑定目标 POI 的采矿资源类型（随机选一种，抵达后生效）
 	var res_pool = POI_RESOURCES.get(target_poi, [])
@@ -368,14 +370,16 @@ static func handle_equip(peer_id: int, player: Dictionary, payload: Dictionary, 
 		return
 
 	# 装配
+	var player_id = player.get("player_id", 0)
 	components[component_id] = slot
 	player["components"] = components
-	inventory[component_id] = inventory.get(component_id, 1) - 1
+	inventory[component_id] = max(0, inventory.get(component_id, 1) - 1)
+	if inventory[component_id] <= 0:
+		inventory.erase(component_id)
 	player["inventory"] = inventory
 
-	db._query("INSERT INTO ship_components (player_id, slot, component_id) VALUES (%d, '%s', '%s')" % [
-		player.get("player_id", 0), slot, component_id
-	])
+	db.install_component(player_id, slot, component_id)
+	db.adjust_inventory(player_id, component_id, -1)
 
 	server.send_to_peer(peer_id, {"type": "action_result", "action": "equip", "success": true, "component_id": component_id, "slot": slot})
 
@@ -392,6 +396,7 @@ static func handle_unequip(peer_id: int, player: Dictionary, payload: Dictionary
 		server.send_to_peer(peer_id, {"type": "error", "message": "该组件未安装"})
 		return
 
+	var player_id = player.get("player_id", 0)
 	components.erase(component_id)
 	player["components"] = components
 
@@ -399,9 +404,8 @@ static func handle_unequip(peer_id: int, player: Dictionary, payload: Dictionary
 	inventory[component_id] = inventory.get(component_id, 0) + 1
 	player["inventory"] = inventory
 
-	db._query("DELETE FROM ship_components WHERE player_id=%d AND component_id='%s'" % [
-		player.get("player_id", 0), component_id
-	])
+	db.remove_component(player_id, component_id)
+	db.adjust_inventory(player_id, component_id, 1)
 
 	server.send_to_peer(peer_id, {"type": "action_result", "action": "unequip", "success": true, "component_id": component_id})
 
@@ -442,7 +446,7 @@ static func handle_accept_mission(peer_id: int, player: Dictionary, payload: Dic
 		"mining":
 			# 必须装配至少 1 个矿机
 			var has_miner = false
-			for comp_id in player.get("components", {}).values():
+			for comp_id in player.get("components", {}).keys():
 				if comp_id.begins_with("MIN"):
 					has_miner = true
 					break
@@ -511,7 +515,7 @@ static func handle_buy_fuel(peer_id: int, player: Dictionary, payload: Dictionar
 		"payload": {"power": ship["power"], "credits": ship["credits"]}
 	})
 
-static func handle_connect_grid(peer_id: int, player: Dictionary, _payload: Dictionary, _db: DatabaseManager, server: Node) -> void:
+static func handle_connect_grid(peer_id: int, player: Dictionary, _payload: Dictionary, db: DatabaseManager, server: Node) -> void:
 	var ship = player.get("ship", {})
 	if ship.get("status", "") != "docked":
 		server.send_to_peer(peer_id, {"type": "error", "message": "只能在停泊状态连接电网"})
@@ -524,7 +528,8 @@ static func handle_connect_grid(peer_id: int, player: Dictionary, _payload: Dict
 		return
 
 	ship["grid_connected"] = true
-	ship["grid_connect_time"] = Time.get_unix_time_from_system()
+	ship["last_grid_tick"] = Time.get_unix_time_from_system()
+	db.save_ship(ship)
 
 	server.send_to_peer(peer_id, {
 		"type": "action_result", "action": "connect_grid", "success": true,

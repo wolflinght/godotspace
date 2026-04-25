@@ -51,6 +51,9 @@ func _ready() -> void:
 	print("[Server] 服务端就绪，等待玩家连接...")
 
 func _process(delta: float) -> void:
+	if _tcp_server == null:
+		return
+
 	# 接受新连接
 	while _tcp_server.is_connection_available():
 		var tcp = _tcp_server.take_connection()
@@ -123,6 +126,10 @@ func _process_player_tick(peer_id: int, player: Dictionary, now: float) -> void:
 func _tick_docked(_peer_id: int, _player: Dictionary, ship: Dictionary, now: float) -> void:
 	if not ship.get("grid_connected", false):
 		return
+	if not ActionHandler.POI_INFO.get(ship.get("current_poi", ""), {}).get("is_station", false):
+		ship["grid_connected"] = false
+		_db.save_ship(ship)
+		return
 	# 电网充电：10 电力/分钟
 	var last = ship.get("last_grid_tick", now)
 	ship["last_grid_tick"] = now
@@ -130,6 +137,7 @@ func _tick_docked(_peer_id: int, _player: Dictionary, ship: Dictionary, now: flo
 	var gain = int(elapsed_min * 10.0)
 	if gain > 0:
 		ship["power"] = min(ship.get("max_power", 500), ship.get("power", 0) + gain)
+		_db.save_ship(ship)
 
 func _tick_transit(peer_id: int, player: Dictionary, ship: Dictionary, now: float) -> void:
 	var depart_time: float = ship.get("depart_time", now)
@@ -159,6 +167,7 @@ func _tick_transit(peer_id: int, player: Dictionary, ship: Dictionary, now: floa
 	if now - last_push >= 10.0:
 		ship["last_state_push"] = now
 		_push_state_update(peer_id, ship)
+		_db.save_ship(ship)
 
 func _tick_working(peer_id: int, player: Dictionary, ship: Dictionary, now: float) -> void:
 	var last = ship.get("last_work_tick", now)
@@ -180,8 +189,10 @@ func _tick_working(peer_id: int, player: Dictionary, ship: Dictionary, now: floa
 		var mine_events = MissionManager.check_mining_progress(player, res_type, actual, _db)
 		for ev in mine_events:
 			_push_event(peer_id, "mission_completed", ev)
+		_db.save_ship(ship)
 	elif actual == 0:
 		_push_event(peer_id, "poi_depleted", {"poi": poi_id, "message": "本星区资源已枯竭"})
+		_db.save_ship(ship)
 
 func _handle_stranded(peer_id: int, _player: Dictionary, ship: Dictionary) -> void:
 	ship["status"] = "stranded"

@@ -82,6 +82,23 @@ func _apply_action_result(data: Dictionary) -> void:
 			if p.has("credits"):
 				game_state.ship["credits"] = p["credits"]
 			game_state.state_updated.emit()
+		"equip":
+			var equip_component_id = data.get("component_id", "")
+			var slot = data.get("slot", "")
+			if equip_component_id != "" and slot != "":
+				game_state.components[equip_component_id] = slot
+				var current_qty = game_state.inventory.get(equip_component_id, 0)
+				if current_qty > 1:
+					game_state.inventory[equip_component_id] = current_qty - 1
+				else:
+					game_state.inventory.erase(equip_component_id)
+				game_state.state_updated.emit()
+		"unequip":
+			var unequip_component_id = data.get("component_id", "")
+			if unequip_component_id != "":
+				game_state.components.erase(unequip_component_id)
+				game_state.inventory[unequip_component_id] = game_state.inventory.get(unequip_component_id, 0) + 1
+				game_state.state_updated.emit()
 		"accept_mission":
 			var mid = data.get("mission_id", "")
 			var deadline = data.get("deadline", 0.0)

@@ -10,6 +10,25 @@ var _db_port: int = 3306
 var _db_name: String = "starriver"
 var _db_user: String = "starriver"
 var _db_pass: String = ""
+var _last_query_ok: bool = true
+var _ship_columns: Dictionary = {}
+
+const OPTIONAL_SHIP_COLUMNS = {
+	"total_power_cost": "INT DEFAULT 0",
+	"power_used_so_far": "INT DEFAULT 0",
+	"travel_distance": "DOUBLE DEFAULT 0",
+	"last_encounter_dist": "DOUBLE DEFAULT 0",
+	"target_danger": "INT DEFAULT 0",
+	"mining_resource": "VARCHAR(64) DEFAULT ''",
+	"mining_rate": "DOUBLE DEFAULT 0",
+	"last_work_tick": "DOUBLE DEFAULT 0",
+	"grid_connected": "TINYINT DEFAULT 0",
+	"last_grid_tick": "DOUBLE DEFAULT 0"
+}
+const OPTIONAL_SHIP_INT_COLUMNS = ["total_power_cost", "power_used_so_far", "target_danger"]
+const OPTIONAL_SHIP_FLOAT_COLUMNS = ["travel_distance", "last_encounter_dist", "mining_rate", "last_work_tick", "last_grid_tick"]
+const OPTIONAL_SHIP_STRING_COLUMNS = ["mining_resource"]
+const OPTIONAL_SHIP_BOOL_COLUMNS = ["grid_connected"]
 
 func connect_db() -> bool:
 	if not _load_db_config():
@@ -26,8 +45,15 @@ func connect_db() -> bool:
 
 	# 测试连接
 	var result = _query("SELECT 1")
-	if result == null:
+	if not _last_query_ok or result.size() == 0 or result[0].size() == 0 or str(result[0][0]) != "1":
 		push_error("[DB] 数据库连接测试失败")
+		return false
+
+	if not _load_schema_info():
+		push_error("[DB] 数据库表结构读取失败")
+		return false
+	if not _ensure_optional_ship_columns():
+		push_error("[DB] ships 表缺少必要的运行状态字段，且自动补列失败")
 		return false
 
 	print("[DB] 数据库连接成功: %s@%s/%s" % [_db_user, _db_host, _db_name])
@@ -89,12 +115,54 @@ func _get_secret(dotenv: Dictionary, keys: Array, fallback: String = "") -> Stri
 			return str(dotenv[key])
 	return fallback
 
+func _load_schema_info() -> bool:
+	_ship_columns.clear()
+	var rows = _query("SHOW COLUMNS FROM ships")
+	if not _last_query_ok:
+		return false
+	for r in rows:
+		if r.size() > 0:
+			_ship_columns[str(r[0])] = true
+	return true
+
+func _ensure_optional_ship_columns() -> bool:
+	for col in OPTIONAL_SHIP_COLUMNS.keys():
+		if _ship_columns.has(col):
+			continue
+		_query("ALTER TABLE ships ADD COLUMN %s %s" % [col, OPTIONAL_SHIP_COLUMNS[col]])
+		if _last_query_ok:
+			_ship_columns[col] = true
+		else:
+			return false
+	return true
+
+func _write_mysql_defaults_file() -> String:
+	var local_path = "user://mysql_client.cnf"
+	var file = FileAccess.open(local_path, FileAccess.WRITE)
+	if file == null:
+		push_error("[DB] 无法创建 MySQL 临时配置文件")
+		return ""
+	file.store_line("[client]")
+	file.store_line("host=%s" % _mysql_option_value(_db_host))
+	file.store_line("port=%d" % _db_port)
+	file.store_line("user=%s" % _mysql_option_value(_db_user))
+	file.store_line("password=%s" % _mysql_option_value(_db_pass))
+	file.close()
+
+	var global_path = ProjectSettings.globalize_path(local_path)
+	OS.execute("chmod", ["600", global_path])
+	return global_path
+
+func _mysql_option_value(value: String) -> String:
+	return value.replace("\n", "").replace("\r", "")
+
 func _query(sql: String) -> Array:
+	_last_query_ok = false
+	var defaults_path = _write_mysql_defaults_file()
+	if defaults_path == "":
+		return []
 	var args = [
-		"-h", _db_host,
-		"-P", str(_db_port),
-		"-u", _db_user,
-		"-p" + _db_pass,
+		"--defaults-extra-file=" + defaults_path,
 		"-D", _db_name,
 		"--batch",
 		"--skip-column-names",
@@ -102,10 +170,12 @@ func _query(sql: String) -> Array:
 	]
 	var output = []
 	var exit_code = OS.execute(_mysql_cmd, args, output, true, false)
+	DirAccess.remove_absolute(defaults_path)
 	if exit_code != 0:
 		push_error("[DB] SQL 执行失败: " + sql)
 		return []
 
+	_last_query_ok = true
 	var rows = []
 	var raw = output[0] if output.size() > 0 else ""
 	for line in raw.split("\n"):
@@ -156,30 +226,47 @@ func _load_full_player(player_id: int) -> Dictionary:
 	var player = {"player_id": player_id}
 
 	# 加载飞船状态
-	var ship_rows = _query("SELECT status, current_poi, target_poi, depart_time, eta, hp, shield, power, max_power, credits, slot_hp FROM ships WHERE player_id=%d LIMIT 1" % player_id)
+	var ship_fields = ["status", "current_poi", "target_poi", "depart_time", "eta", "hp", "shield", "power", "max_power", "credits", "slot_hp"]
+	for col in OPTIONAL_SHIP_INT_COLUMNS + OPTIONAL_SHIP_FLOAT_COLUMNS + OPTIONAL_SHIP_STRING_COLUMNS + OPTIONAL_SHIP_BOOL_COLUMNS:
+		if _ship_columns.has(col):
+			ship_fields.append(col)
+	var ship_rows = _query("SELECT %s FROM ships WHERE player_id=%d LIMIT 1" % [", ".join(ship_fields), player_id])
 	if ship_rows.size() > 0:
-		var r = ship_rows[0]
-		var slot_hp_raw = r[10] if r.size() > 10 else ""
+		var row = _row_to_dict(ship_fields, ship_rows[0])
+		var slot_hp_raw = row.get("slot_hp", "")
 		var slot_hp = JSON.parse_string(slot_hp_raw) if slot_hp_raw != "" and slot_hp_raw != "NULL" else {}
 		if not slot_hp is Dictionary:
 			slot_hp = {}
 		# 确保所有槽位都有默认耐久
-		for slot in ["nose", "wings", "hull", "tail", "core", "cabin"]:
-			if not slot_hp.has(slot):
-				slot_hp[slot] = 1000
-		player["ship"] = {
-			"status": r[0],
-			"current_poi": r[1],
-			"target_poi": r[2],
-			"depart_time": float(r[3]) if r[3] != "NULL" else 0.0,
-			"eta": float(r[4]) if r[4] != "NULL" else 0.0,
-			"hp": int(r[5]),
-			"shield": int(r[6]),
-			"power": int(r[7]),
-			"max_power": int(r[8]),
-			"credits": int(r[9]),
+			for slot in ["nose", "wings", "hull", "tail", "core", "cabin"]:
+				if not slot_hp.has(slot):
+					slot_hp[slot] = 1000
+			player["ship"] = {
+				"player_id": player_id,
+				"status": row.get("status", "docked"),
+				"current_poi": row.get("current_poi", ""),
+				"target_poi": row.get("target_poi", ""),
+			"depart_time": _row_float(row, "depart_time", 0.0),
+			"eta": _row_float(row, "eta", 0.0),
+			"hp": _row_int(row, "hp", 1000),
+			"shield": _row_int(row, "shield", 0),
+			"power": _row_int(row, "power", 0),
+			"max_power": _row_int(row, "max_power", 500),
+			"credits": _row_int(row, "credits", 0),
 			"slot_hp": slot_hp
 		}
+		for col in OPTIONAL_SHIP_INT_COLUMNS:
+			if row.has(col):
+				player["ship"][col] = _row_int(row, col, 0)
+		for col in OPTIONAL_SHIP_FLOAT_COLUMNS:
+			if row.has(col):
+				player["ship"][col] = _row_float(row, col, 0.0)
+		for col in OPTIONAL_SHIP_STRING_COLUMNS:
+			if row.has(col):
+				player["ship"][col] = row[col] if row[col] != "NULL" else ""
+		for col in OPTIONAL_SHIP_BOOL_COLUMNS:
+			if row.has(col):
+				player["ship"][col] = _row_bool(row, col, false)
 	else:
 		# 新玩家默认飞船
 		player["ship"] = _default_ship(player_id)
@@ -190,11 +277,19 @@ func _load_full_player(player_id: int) -> Dictionary:
 	for r in res_rows:
 		player["resources"][r[0]] = float(r[1])
 
+	# 加载仓库
+	var inv_rows = _query("SELECT component_id, quantity FROM inventory WHERE player_id=%d" % player_id)
+	player["inventory"] = {}
+	for r in inv_rows:
+		if r.size() >= 2:
+			player["inventory"][r[0]] = int(r[1])
+
 	# 加载装配组件
 	var comp_rows = _query("SELECT slot, component_id FROM ship_components WHERE player_id=%d" % player_id)
 	player["components"] = {}
 	for r in comp_rows:
-		player["components"][r[0]] = r[1]
+		if r.size() >= 2:
+			player["components"][r[1]] = r[0]
 
 	# 加载船员
 	var crew_rows = _query("SELECT slot, tier, trait_id, name, backstory, catchphrase, salary, debt FROM crew WHERE player_id=%d" % player_id)
@@ -229,6 +324,7 @@ func _load_full_player(player_id: int) -> Dictionary:
 	else:
 		player["reputation"] = {"ironclad": 0, "macula": 0, "neutral": 0}
 
+	_hydrate_runtime_ship_state(player)
 	return player
 
 func _default_ship(player_id: int) -> Dictionary:
@@ -246,7 +342,17 @@ func _default_ship(player_id: int) -> Dictionary:
 		"power": 500,
 		"max_power": 500,
 		"credits": 1000,
-		"slot_hp": default_slot_hp
+		"slot_hp": default_slot_hp,
+		"total_power_cost": 0,
+		"power_used_so_far": 0,
+		"travel_distance": 0.0,
+		"last_encounter_dist": 0.0,
+		"target_danger": 0,
+		"mining_resource": "",
+		"mining_rate": 0.0,
+		"last_work_tick": 0.0,
+		"grid_connected": false,
+		"last_grid_tick": 0.0
 	}
 	_query("INSERT INTO ships (player_id, status, current_poi, hp, shield, power, max_power, credits, slot_hp) VALUES (%d, 'docked', 'CYG-SS-01', 1000, 0, 500, 500, 1000, '%s')" % [player_id, _escape(slot_hp_json)])
 	return ship
@@ -256,18 +362,28 @@ func save_ship(ship: Dictionary) -> void:
 	if player_id == 0:
 		return
 	var slot_hp_json = JSON.stringify(ship.get("slot_hp", {}))
-	_query("UPDATE ships SET status='%s', current_poi='%s', target_poi='%s', hp=%d, shield=%d, power=%d, max_power=%d, credits=%d, slot_hp='%s' WHERE player_id=%d" % [
-		_escape(ship.get("status", "docked")),
-		_escape(ship.get("current_poi", "")),
-		_escape(ship.get("target_poi", "")),
-		ship.get("hp", 100),
-		ship.get("shield", 0),
-		ship.get("power", 0),
-		ship.get("max_power", 500),
-		ship.get("credits", 0),
-		_escape(slot_hp_json),
-		player_id
-	])
+	var sets = [
+		"status='%s'" % _escape(ship.get("status", "docked")),
+		"current_poi='%s'" % _escape(ship.get("current_poi", "")),
+		"target_poi='%s'" % _escape(ship.get("target_poi", "")),
+		"depart_time=%f" % float(ship.get("depart_time", 0.0)),
+		"eta=%f" % float(ship.get("eta", 0.0)),
+		"hp=%d" % int(ship.get("hp", 100)),
+		"shield=%d" % int(ship.get("shield", 0)),
+		"power=%d" % int(ship.get("power", 0)),
+		"max_power=%d" % int(ship.get("max_power", 500)),
+		"credits=%d" % int(ship.get("credits", 0)),
+		"slot_hp='%s'" % _escape(slot_hp_json)
+	]
+	for col in OPTIONAL_SHIP_INT_COLUMNS:
+		_append_optional_ship_set(sets, ship, col, "int")
+	for col in OPTIONAL_SHIP_FLOAT_COLUMNS:
+		_append_optional_ship_set(sets, ship, col, "float")
+	for col in OPTIONAL_SHIP_STRING_COLUMNS:
+		_append_optional_ship_set(sets, ship, col, "string")
+	for col in OPTIONAL_SHIP_BOOL_COLUMNS:
+		_append_optional_ship_set(sets, ship, col, "bool")
+	_query("UPDATE ships SET %s WHERE player_id=%d" % [", ".join(sets), player_id])
 
 func save_player_state(player: Dictionary) -> void:
 	var ship = player.get("ship", {})
@@ -280,6 +396,53 @@ func save_player_state(player: Dictionary) -> void:
 		var amount = player["resources"][resource_type]
 		_query("INSERT INTO resources (player_id, resource_type, amount) VALUES (%d, '%s', %f) ON DUPLICATE KEY UPDATE amount=%f" % [
 			player_id, _escape(resource_type), amount, amount
+		])
+
+	# 保存仓库，以内存快照为准，避免已移除物品在 DB 中残留
+	_query("DELETE FROM inventory WHERE player_id=%d" % player_id)
+	for component_id in player.get("inventory", {}).keys():
+		var quantity = int(player["inventory"][component_id])
+		if quantity > 0:
+			_query("INSERT INTO inventory (player_id, component_id, quantity) VALUES (%d, '%s', %d)" % [
+				player_id, _escape(component_id), quantity
+			])
+
+	# 保存装配组件，统一使用 {component_id: slot}
+	_query("DELETE FROM ship_components WHERE player_id=%d" % player_id)
+	for component_id in player.get("components", {}).keys():
+		var slot = str(player["components"][component_id])
+		if slot != "":
+			_query("INSERT INTO ship_components (player_id, slot, component_id) VALUES (%d, '%s', '%s')" % [
+				player_id, _escape(slot), _escape(component_id)
+			])
+
+func install_component(player_id: int, slot: String, component_id: String) -> void:
+	_query("DELETE FROM ship_components WHERE player_id=%d AND component_id='%s'" % [
+		player_id, _escape(component_id)
+	])
+	_query("INSERT INTO ship_components (player_id, slot, component_id) VALUES (%d, '%s', '%s')" % [
+		player_id, _escape(slot), _escape(component_id)
+	])
+
+func remove_component(player_id: int, component_id: String) -> void:
+	_query("DELETE FROM ship_components WHERE player_id=%d AND component_id='%s'" % [
+		player_id, _escape(component_id)
+	])
+
+func adjust_inventory(player_id: int, component_id: String, delta: int) -> void:
+	if delta == 0:
+		return
+	if delta > 0:
+		_query("INSERT INTO inventory (player_id, component_id, quantity) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE quantity=quantity+%d" % [
+			player_id, _escape(component_id), delta, delta
+		])
+	else:
+		var amount = abs(delta)
+		_query("UPDATE inventory SET quantity=GREATEST(0, quantity-%d) WHERE player_id=%d AND component_id='%s'" % [
+			amount, player_id, _escape(component_id)
+		])
+		_query("DELETE FROM inventory WHERE player_id=%d AND component_id='%s' AND quantity<=0" % [
+			player_id, _escape(component_id)
 		])
 
 func add_player_resource(player_id: int, resource_type: String, amount: float) -> void:
@@ -366,6 +529,96 @@ func deduct_crew_salaries() -> void:
 			var debt = salary - credits
 			_query("UPDATE ships SET credits=0 WHERE player_id=%d" % player_id)
 			_query("UPDATE crew SET debt=debt+%d WHERE player_id=%d AND slot='%s'" % [debt, player_id, _escape(r[1])])
+
+func _append_optional_ship_set(sets: Array, ship: Dictionary, col: String, kind: String) -> void:
+	if not _ship_columns.has(col):
+		return
+	match kind:
+		"int":
+			sets.append("%s=%d" % [col, int(ship.get(col, 0))])
+		"float":
+			sets.append("%s=%f" % [col, float(ship.get(col, 0.0))])
+		"string":
+			sets.append("%s='%s'" % [col, _escape(str(ship.get(col, "")))])
+		"bool":
+			sets.append("%s=%d" % [col, 1 if ship.get(col, false) else 0])
+
+func _row_to_dict(fields: Array, values: Array) -> Dictionary:
+	var row = {}
+	for i in range(fields.size()):
+		row[fields[i]] = values[i] if i < values.size() else "NULL"
+	return row
+
+func _row_int(row: Dictionary, key: String, fallback: int = 0) -> int:
+	var value = str(row.get(key, "NULL"))
+	if value == "" or value == "NULL":
+		return fallback
+	return int(value)
+
+func _row_float(row: Dictionary, key: String, fallback: float = 0.0) -> float:
+	var value = str(row.get(key, "NULL"))
+	if value == "" or value == "NULL":
+		return fallback
+	return float(value)
+
+func _row_bool(row: Dictionary, key: String, fallback: bool = false) -> bool:
+	var value = str(row.get(key, "NULL")).to_lower()
+	if value == "" or value == "null":
+		return fallback
+	return value == "1" or value == "true" or value == "yes"
+
+func _hydrate_runtime_ship_state(player: Dictionary) -> void:
+	var ship = player.get("ship", {})
+	if ship.is_empty():
+		return
+	var status = ship.get("status", "docked")
+	if status == "in_transit":
+		var current_poi = ship.get("current_poi", "")
+		var target_poi = ship.get("target_poi", "")
+		var distance = float(ship.get("travel_distance", 0.0))
+		if distance <= 0.0 and target_poi != "":
+			distance = float(ActionHandler._get_distance(current_poi, target_poi))
+		ship["travel_distance"] = distance
+		ship["target_danger"] = ActionHandler.POI_DANGER.get(target_poi, 0)
+		if int(ship.get("total_power_cost", 0)) <= 0:
+			ship["total_power_cost"] = _calc_travel_power_cost(player, int(distance))
+		if not ship.has("power_used_so_far"):
+			ship["power_used_so_far"] = 0
+		if not ship.has("last_encounter_dist"):
+			ship["last_encounter_dist"] = 0.0
+		if ship.get("mining_resource", "") == "":
+			ship["mining_resource"] = _pick_default_mining_resource(target_poi)
+		if float(ship.get("mining_rate", 0.0)) <= 0.0:
+			ship["mining_rate"] = _calc_mining_rate(player)
+	elif status == "working":
+		var current_poi = ship.get("current_poi", "")
+		if ship.get("mining_resource", "") == "":
+			ship["mining_resource"] = _pick_default_mining_resource(current_poi)
+		if float(ship.get("mining_rate", 0.0)) <= 0.0:
+			ship["mining_rate"] = _calc_mining_rate(player)
+		if not ship.has("last_work_tick") or float(ship.get("last_work_tick", 0.0)) <= 0.0:
+			ship["last_work_tick"] = Time.get_unix_time_from_system()
+
+func _calc_travel_power_cost(player: Dictionary, distance: int) -> int:
+	var p_cost_total = ActionHandler._calc_p_cost(player)
+	var base_dist_cost = distance * 10
+	if ActionHandler._count_prefix(player, "singularity") >= 4:
+		p_cost_total = int(p_cost_total * 0.5)
+	if ActionHandler._has_trait(player, "engineer_t1_efficient"):
+		base_dist_cost = int(base_dist_cost * 0.85)
+	return base_dist_cost + p_cost_total
+
+func _calc_mining_rate(player: Dictionary) -> float:
+	var total_mining_rate: float = 0.0
+	for comp_id in player.get("components", {}).keys():
+		total_mining_rate += ActionHandler.COMPONENT_DATA.get(comp_id, {}).get("mining_rate", 0)
+	if ActionHandler._count_prefix(player, "ironclad") >= 4:
+		total_mining_rate *= 1.30
+	return total_mining_rate
+
+func _pick_default_mining_resource(poi_id: String) -> String:
+	var res_pool = ActionHandler.POI_RESOURCES.get(poi_id, [])
+	return res_pool[0] if res_pool.size() > 0 else ""
 
 func _escape(s: String) -> String:
 	# 基础 SQL 转义（防注入）
