@@ -37,3 +37,7 @@ Constants="*res://scripts/shared/Constants.gd"
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[star_river]
+
+local_prototype_enabled=true

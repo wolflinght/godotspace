@@ -6,6 +6,7 @@ extends Node
 # 本地调试改为 ws://localhost:7777，生产环境改为 ws://8.161.225.239:7777
 const SERVER_URL = "ws://localhost:7777"
 const RECONNECT_DELAY = 3.0
+const LOCAL_PROTOTYPE_SETTING = "star_river/local_prototype_enabled"
 
 signal connected()
 signal disconnected()
@@ -15,18 +16,34 @@ var _ws: WebSocketPeer
 var _reconnect_timer: float = 0.0
 var _is_connected: bool = false
 var _pending_messages: Array = []
+var _network_enabled: bool = true
 
 func _ready() -> void:
+	_network_enabled = not ProjectSettings.get_setting(LOCAL_PROTOTYPE_SETTING, true)
+	if not _network_enabled:
+		set_process(false)
+		return
 	_ws = WebSocketPeer.new()
 	connect_to_server()
 
+func set_network_enabled(value: bool) -> void:
+	_network_enabled = value
+	set_process(value)
+	if value and _ws == null:
+		_ws = WebSocketPeer.new()
+		connect_to_server()
+
 func connect_to_server() -> void:
+	if not _network_enabled:
+		return
 	print("[Client] 连接到服务器: " + SERVER_URL)
 	var err = _ws.connect_to_url(SERVER_URL)
 	if err != OK:
 		push_error("[Client] 连接失败: " + str(err))
 
 func _process(delta: float) -> void:
+	if not _network_enabled or _ws == null:
+		return
 	_ws.poll()
 	var state = _ws.get_ready_state()
 
@@ -60,6 +77,8 @@ func _process(delta: float) -> void:
 				connect_to_server()
 
 func send(data: Dictionary) -> void:
+	if not _network_enabled:
+		return
 	if _is_connected and _ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
 		_ws.send_text(JSON.stringify(data))
 	else:
@@ -78,4 +97,4 @@ func send_ping() -> void:
 	send({"type": "ping"})
 
 func is_connected_to_server() -> bool:
-	return _is_connected
+	return _network_enabled and _is_connected
